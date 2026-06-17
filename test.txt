@@ -1,0 +1,2334 @@
+executor = identifyexecutor and identifyexecutor() or ""
+blocked = {"xeno", "solara", "luna", "synapse x"}
+for _, bad in ipairs(blocked) do
+    if executor:lower():find(bad) then
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "aerodynamic",
+            Text = "unsupported executor",
+            Duration = 5,
+        })
+        return
+    end
+end
+
+ok,err=pcall(function()
+
+if not firetouchinterest then firetouchinterest=function()end end
+if not getconnections then getconnections=function()return{}end end
+if not writefile then writefile=function()end end
+if not readfile then readfile=function()return""end end
+if not isfile then isfile=function()return false end end
+if not isfolder then isfolder=function()return false end end
+if not makefolder then makefolder=function()end end
+if not fireproximityprompt then fireproximityprompt=function()end end
+
+lp=game:GetService("Players").LocalPlayer
+rs=game:GetService("RunService")
+uis=game:GetService("UserInputService")
+http=game:GetService("HttpService")
+ts=game:GetService("TweenService")
+task.wait(0.5)
+
+S={
+	void=false,orbit=false,tpa=false,
+	bypass=false,riotAbuse=false,
+	rf=false,sa=false,antiaim=false,
+	espBox=false,espName=false,espHealth=false,
+	espDist=false,espChams=false,espTracer=false,
+	espSkeleton=false,espCornerBox=false,espHeadCircle=false,espHeadDot=false,
+	hitNotify=false,killNotify=false,
+	hitSound=false,killSound=false,
+	ch=false,motion=false,
+	darkWorld=false,fullbright=false,rainbowWorld=false,
+	neonWorld=false,bloodWorld=false,blueWorld=false,
+	whiteWorld=false,enemyHL=false,
+	studsUI=false,
+	fovVisible=false,
+	rfAutoSwing=false,rfMultiActivate=false,rfBypassMode=false,
+	rivalsBypass=false,
+}
+
+accentCol=Color3.fromRGB(220,40,40)
+chCol=Color3.fromRGB(255,255,255)
+fovColor=Color3.fromRGB(255,255,255)
+fovMode="outline"
+
+-- void spam
+vsSpeed=0.016
+vsCustomEnabled=false
+vsCustomX=0
+vsCustomY=-20184869458
+vsCustomZ=0
+vsYCurrent=-20184869458
+vsYIncrement=500000
+vsYIncrEnabled=true
+vsYCustom=-20184869458
+vsBoostY=0
+vsFreeze=false
+vsNoclip=false
+vsAngle=0
+vsAngle2=0
+vsRadius=1000000000
+vsXDist=1000000000
+vsYDist=5000000000
+vsZDist=1000000000
+vsStaticX=0
+vsStaticY=-20184869458
+vsStaticZ=0
+vsPattern="everywhere"
+vsMultiTP=false
+vsMultiCount=3
+vsMultiDelay=0.002
+vsRandomizeEach=false
+vsLockY=false
+vsLockYVal=-20184869458
+vsInvertX=false
+vsInvertZ=false
+vsSwapXZ=false
+vsAbsCoords=false
+vsNoiseX=0
+vsNoiseY=0
+vsNoiseZ=0
+vsScaleX=1
+vsScaleY=1
+vsScaleZ=1
+vsOffsetX=0
+vsOffsetY=0
+vsOffsetZ=0
+vsPulseAmt=0
+vsPulseT=0
+vsWaveAmt=0
+vsWaveT=0
+vsStepSize=1000000
+vsStepDir=1
+vsStepAxis="Y"
+vsTeleportCount=0
+vsMaxTeleports=0
+
+-- orbit
+orbSpeed=0.016
+orbCustomEnabled=false
+orbCustomX=0
+orbCustomY=-20184869458
+orbCustomZ=0
+orbYCurrent=-20184869458
+orbYIncrement=500000
+orbYIncrEnabled=false
+orbYCustom=-20184869458
+orbBoostY=0
+orbAngle=0
+orbAngle2=0
+orbRadius=50
+orbXDist=27000000
+orbYDist=20000000
+orbZDist=25000000
+orbStaticX=0
+orbStaticY=-20184869458
+orbStaticZ=0
+orbTarget="nearest"
+orbHeight=5
+orbPattern="everywhere"
+orbLock=false
+orbMultiTP=false
+orbMultiCount=3
+orbMultiDelay=0.002
+orbRandomizeEach=false
+orbLockY=false
+orbLockYVal=-20184869458
+orbInvertX=false
+orbInvertZ=false
+orbSwapXZ=false
+orbAbsCoords=false
+orbNoiseX=0
+orbNoiseY=0
+orbNoiseZ=0
+orbScaleX=1
+orbScaleY=1
+orbScaleZ=1
+orbOffsetX=0
+orbOffsetY=0
+orbOffsetZ=0
+orbPulseAmt=0
+orbPulseT=0
+orbWaveAmt=0
+orbWaveT=0
+orbStepSize=1000000
+orbStepDir=1
+orbStepAxis="Y"
+orbRelativeToTarget=true
+orbSpreadMode="uniform"
+orbAltitude=0
+orbAltitudeMode="fixed"
+
+tvs,torb,ttpa,taf=0,0,0,0
+ut=0
+savedNormalPos=nil
+savedOrbitPos=nil
+
+saFOV=120
+saPred=0.08
+saConn=nil
+
+chSize=16
+chThick=2
+chGap=5
+chAlpha=1
+chRotate=false
+chBounce=false
+chStyle=1
+chAng=0
+chBV=0
+chBD=1
+chOutline=false
+chOutlineCol=Color3.fromRGB(0,0,0)
+chDynamic=false
+chRainbow=false
+chRainbowHue=0
+chPulse=false
+chPulseDir=1
+chPulseVal=1
+
+motionPattern="orbit"
+motionSpeed=50
+motionR=15
+motionAng=0
+motionT=0
+motionBounceDir=1
+
+moveSpeed=16
+aaMode="spinbot"
+aaAng=0
+fireRate=0.01
+rfConn=nil
+rfSwingRate=0.05
+rfMultiCount=3
+
+bpLock=false
+rfDouble=false
+rfBypass=false
+riotMode="touched"
+bpMode="both"
+bpDistance=5
+bpMultiHit=false
+bpHitDelay=0.05
+riotSpam=false
+snapped=setmetatable({},{__mode="k"})
+preSavedCF=nil
+
+rivalsWeapons={"Dagger","Bow","Sword","Knife","Blade","Scythe","Claws","Hammer","Staff","Wand"}
+rivalsBpMode="remote"
+rivalsHitRemote=nil
+rivalsDmg=10
+
+soundIds={
+	"3051417649","263599290","4612378735","131384028","5996050907",
+	"6042053626","9119674388","142376088","148323181","154965962",
+	"165946417","169445416","172959180","216917652","220833967",
+	"3040425874","4612195593","5996050907","6359154978","7148579960",
+	"131961136","131961145","131961157","131961166","131961182",
+}
+soundNames={
+	"neverlose","tick","pop","beep","impact",
+	"ding","dink","snap","thud","crack",
+	"click","blip","chime","bell","swoosh",
+	"bass","electric","synth","retro","modern",
+	"hit1","hit2","hit3","hit4","hit5",
+}
+killSoundIds={
+	"5996050907","131384028","4612378735","263599290","6042053626",
+	"148323181","154965962","172959180","216917652","3040425874",
+	"131961136","131961145","131961157","131961166","131961182",
+}
+killSoundNames={
+	"ding","impact","pop","tick","neverlose",
+	"thud","crack","chime","bell","bass",
+	"kill1","kill2","kill3","kill4","kill5",
+}
+customHitSndId=""
+customKillSndId=""
+sndIdx=1
+killSndIdx=1
+hitSnd=nil
+killSnd=nil
+hitSndVol=1
+killSndVol=1
+hitSndPitch=1
+killSndPitch=1
+
+savedCfgs={}
+libraryReady=false
+
+studsUIRef=nil
+studsUIUpdateConn=nil
+
+pcall(function()
+	raw=readfile("aerodynamic_cfgs.json")
+	if raw and raw~="" then
+		d=http:JSONDecode(raw)
+		if type(d)=="table" then savedCfgs=d end
+	end
+end)
+
+task.spawn(function()
+	while true do
+		task.wait(30)
+		for k in pairs(snapped) do snapped[k]=nil end
+	end
+end)
+
+function getAny()
+	for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+		if pl~=lp and pl.Character then
+			h=pl.Character:FindFirstChild("HumanoidRootPart")
+			hum=pl.Character:FindFirstChildOfClass("Humanoid")
+			if h and hum and hum.Health>0 then return pl.Character,pl end
+		end
+	end
+end
+
+function getNearest()
+	best,bd,bp=nil,math.huge,nil
+	me=lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
+	if not me then return nil,nil end
+	for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+		if pl~=lp and pl.Character then
+			h=pl.Character:FindFirstChild("HumanoidRootPart")
+			hum=pl.Character:FindFirstChildOfClass("Humanoid")
+			if h and hum and hum.Health>0 then
+				d=(h.Position-me.Position).Magnitude
+				if d<bd then best=pl.Character bd=d bp=pl end
+			end
+		end
+	end
+	return best,bp
+end
+
+riotCache={}
+function scanRiot(chr)
+	if not chr then return end
+	for _,p in ipairs(chr:GetDescendants()) do
+		if p:IsA("BasePart") then
+			n=p.Name:lower()
+			if n:find("riot") or n:find("shield") or n:find("block") or n:find("guard") then
+				riotCache[chr]=p return
+			end
+		end
+	end
+end
+for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+	if pl.Character then task.spawn(function()scanRiot(pl.Character)end) end
+	pl.CharacterAdded:Connect(function(chr)task.delay(1,function()scanRiot(chr)end)end)
+end
+game:GetService("Players").PlayerAdded:Connect(function(pl)
+	pl.CharacterAdded:Connect(function(chr)task.delay(1,function()scanRiot(chr)end)end)
+end)
+
+function mkSound()
+	pcall(function()
+		if hitSnd and hitSnd.Parent then hitSnd:Destroy() end
+		parent=workspace.CurrentCamera or game:GetService("SoundService")
+		hitSnd=Instance.new("Sound")
+		hitSnd.Volume=hitSndVol hitSnd.PlaybackSpeed=hitSndPitch
+		hitSnd.RollOffMaxDistance=999999 hitSnd.RollOffMode=Enum.RollOffMode.InverseTapered
+		hitSnd.SoundId="rbxassetid://"..(customHitSndId~="" and customHitSndId or soundIds[sndIdx])
+		hitSnd.Parent=parent
+	end)
+end
+function mkKillSound()
+	pcall(function()
+		if killSnd and killSnd.Parent then killSnd:Destroy() end
+		parent=workspace.CurrentCamera or game:GetService("SoundService")
+		killSnd=Instance.new("Sound")
+		killSnd.Volume=killSndVol killSnd.PlaybackSpeed=killSndPitch
+		killSnd.RollOffMaxDistance=999999 killSnd.RollOffMode=Enum.RollOffMode.InverseTapered
+		killSnd.SoundId="rbxassetid://"..(customKillSndId~="" and customKillSndId or killSoundIds[killSndIdx])
+		killSnd.Parent=parent
+	end)
+end
+mkSound() mkKillSound()
+workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+	task.wait(0.1) mkSound() mkKillSound()
+end)
+
+function playHit()
+	if not S.hitSound then return end
+	pcall(function()
+		if not hitSnd or not hitSnd.Parent then mkSound() end
+		if hitSnd then hitSnd:Stop() hitSnd.TimePosition=0 hitSnd:Play() end
+	end)
+end
+function playKill()
+	if not S.killSound then return end
+	pcall(function()
+		if not killSnd or not killSnd.Parent then mkKillSound() end
+		if killSnd then killSnd:Stop() killSnd.TimePosition=0 killSnd:Play() end
+	end)
+end
+
+function startRF()
+	if rfConn then rfConn:Disconnect() end
+	t=0 swingT=0
+	rfConn=rs.Heartbeat:Connect(function(dt)
+		if not S.rf then return end
+		t=t+dt swingT=swingT+dt
+		chr2=lp.Character if not chr2 then return end
+		if t>=fireRate then
+			t=0
+			for _,tool in ipairs(chr2:GetChildren()) do
+				if tool:IsA("Tool") then
+					pcall(function()tool:Activate()end)
+					if rfDouble then task.delay(0.002,function()pcall(function()tool:Activate()end)end) end
+					if S.rfMultiActivate then
+						for i=1,rfMultiCount do task.delay(0.001*i,function()pcall(function()tool:Activate()end)end) end
+					end
+					if S.rfBypassMode or rfBypass then
+						pcall(function()
+							for _,c in ipairs(getconnections(tool.Activated)) do pcall(c.Fire,c) end
+						end)
+					end
+				end
+			end
+		end
+		if S.rfAutoSwing and swingT>=rfSwingRate then
+			swingT=0
+			for _,tool in ipairs(chr2:GetChildren()) do
+				if tool:IsA("Tool") then
+					pcall(function()
+						handle=tool:FindFirstChild("Handle")
+						if handle then
+							weld=handle:FindFirstChildOfClass("Motor6D") or handle:FindFirstChildOfClass("Weld")
+							if weld then weld.C0=weld.C0*CFrame.Angles(0,math.rad(30),0) end
+						end
+					end)
+				end
+			end
+		end
+	end)
+end
+function stopRF() if rfConn then rfConn:Disconnect() rfConn=nil end end
+
+function findRivalsRemotes()
+	pcall(function()
+		for _,v in ipairs(game:GetService("ReplicatedStorage"):GetDescendants()) do
+			if v:IsA("RemoteEvent") or v:IsA("RemoteFunction") then
+				n=v.Name:lower()
+				if n:find("hit") or n:find("damage") or n:find("attack") or n:find("sword") or n:find("dagger") or n:find("bow") then
+					rivalsHitRemote=v break
+				end
+			end
+		end
+	end)
+end
+task.delay(3,findRivalsRemotes)
+
+function doRivalsBypass(target)
+	if not S.rivalsBypass then return end
+	pcall(function()
+		chr=lp.Character if not chr then return end
+		myhrp=chr:FindFirstChild("HumanoidRootPart") if not myhrp then return end
+		tchar=target if not tchar then tchar=getAny() end if not tchar then return end
+		thrp=tchar:FindFirstChild("HumanoidRootPart") if not thrp then return end
+		thum=tchar:FindFirstChildOfClass("Humanoid") if not thum or thum.Health<=0 then return end
+		if rivalsHitRemote and rivalsBpMode=="remote" then
+			if rivalsHitRemote:IsA("RemoteEvent") then
+				pcall(function()rivalsHitRemote:FireServer(thrp,rivalsDmg)end)
+				pcall(function()rivalsHitRemote:FireServer(tchar,rivalsDmg)end)
+			elseif rivalsHitRemote:IsA("RemoteFunction") then
+				pcall(function()rivalsHitRemote:InvokeServer(thrp,rivalsDmg)end)
+			end
+		end
+		if rivalsBpMode=="touch" or rivalsBpMode=="both" then
+			for _,tool in ipairs(chr:GetChildren()) do
+				if tool:IsA("Tool") then
+					handle=tool:FindFirstChild("Handle")
+					if handle then
+						for _,p in ipairs(tchar:GetDescendants()) do
+							if p:IsA("BasePart") then
+								pcall(firetouchinterest,handle,p,0) pcall(firetouchinterest,handle,p,1)
+							end
+						end
+					end
+				end
+			end
+		end
+		if rivalsBpMode=="all" or rivalsBpMode=="both" then
+			for _,v in ipairs(game:GetService("ReplicatedStorage"):GetDescendants()) do
+				if v:IsA("RemoteEvent") then
+					pcall(function()v:FireServer(thrp)end) pcall(function()v:FireServer(tchar)end)
+				end
+			end
+		end
+		pcall(function()
+			for _,p in ipairs(tchar:GetDescendants()) do
+				if p:IsA("ProximityPrompt") then fireproximityprompt(p) end
+			end
+		end)
+	end)
+end
+
+function updateSA()
+	if saConn then saConn:Disconnect() saConn=nil end
+	if not S.sa then return end
+	saConn=rs.RenderStepped:Connect(function()
+		if not S.sa then return end
+		pcall(function()
+			e=getAny() if not e then return end
+			torso=e:FindFirstChild("UpperTorso") or e:FindFirstChild("Torso") or e:FindFirstChild("HumanoidRootPart")
+			if not torso then return end
+			cam=workspace.CurrentCamera if not cam then return end
+			vel=Vector3.zero
+			pcall(function()
+				h=e:FindFirstChild("HumanoidRootPart")
+				if h then vel=h.AssemblyLinearVelocity end
+			end)
+			target=torso.Position+vel*saPred
+			dir=(target-cam.CFrame.Position).Unit
+			cam.CFrame=CFrame.new(cam.CFrame.Position,cam.CFrame.Position+dir)
+		end)
+	end)
+end
+
+guiParent=nil
+pcall(function()
+	cg=game:GetService("CoreGui")
+	Instance.new("ScreenGui",cg):Destroy()
+	guiParent=cg
+end)
+if not guiParent then guiParent=lp.PlayerGui end
+
+for _,v in pairs(game:GetService("CoreGui"):GetChildren()) do
+	if v.Name=="AeroESP" or v.Name=="AeroCH" or v.Name=="AeroFOV" or v.Name=="AeroNotif" or v.Name=="AeroStuds" or v.Name=="AeroXYZ" then
+		v:Destroy()
+	end
+end
+
+notifSg=Instance.new("ScreenGui",guiParent)
+notifSg.Name="AeroNotif" notifSg.ResetOnSpawn=false
+pcall(function()notifSg.IgnoreGuiInset=true end)
+
+lastHP={}
+showHit=nil
+task.spawn(function()
+	while true do
+		task.wait(0.05)
+		pcall(function()
+			for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+				if pl~=lp and pl.Character then
+					hum=pl.Character:FindFirstChildOfClass("Humanoid")
+					if hum then
+						prev=lastHP[pl.UserId]
+						curr=math.floor(hum.Health)
+						if prev and curr<prev and prev>0 then
+							dmg=prev-curr
+							playHit()
+							if showHit then showHit("hit "..pl.Name.." -"..dmg.."hp",false) end
+							if curr<=0 then playKill() if showHit then showHit("killed "..pl.Name,true) end end
+						end
+						lastHP[pl.UserId]=curr
+					end
+				end
+			end
+		end)
+	end
+end)
+
+espSg=Instance.new("ScreenGui",guiParent)
+espSg.Name="AeroESP" espSg.ResetOnSpawn=false
+pcall(function()espSg.IgnoreGuiInset=true end)
+espObjs={}
+
+function clearESP()
+	for _,v in pairs(espObjs) do for _,o in pairs(v) do pcall(function()o:Destroy()end) end end
+	espObjs={}
+end
+function hpColor(hp)
+	if hp>0.6 then return Color3.fromRGB(0,220,80)
+	elseif hp>0.3 then return Color3.fromRGB(255,180,0)
+	else return Color3.fromRGB(255,40,40) end
+end
+SKELETON_JOINTS={
+	{"Head","UpperTorso"},{"UpperTorso","LowerTorso"},
+	{"LowerTorso","LeftUpperLeg"},{"LowerTorso","RightUpperLeg"},
+	{"LeftUpperLeg","LeftLowerLeg"},{"RightUpperLeg","RightLowerLeg"},
+	{"LeftLowerLeg","LeftFoot"},{"RightLowerLeg","RightFoot"},
+	{"UpperTorso","LeftUpperArm"},{"UpperTorso","RightUpperArm"},
+	{"LeftUpperArm","LeftLowerArm"},{"RightUpperArm","RightLowerArm"},
+	{"LeftLowerArm","LeftHand"},{"RightLowerArm","RightHand"},
+}
+function buildESP()
+	clearESP()
+	for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+		if pl~=lp and pl.Character then
+			chr=pl.Character hrp2=chr:FindFirstChild("HumanoidRootPart")
+			if hrp2 then
+				head=chr:FindFirstChild("Head") hum=chr:FindFirstChildOfClass("Humanoid")
+				objs={} me=lp.Character and lp.Character:FindFirstChild("HumanoidRootPart")
+				dist=me and math.floor((hrp2.Position-me.Position).Magnitude) or 0
+				hp=hum and math.clamp(hum.Health/hum.MaxHealth,0,1) or 1
+				if S.espBox then
+					sb=Instance.new("SelectionBox",espSg)
+					sb.Adornee=chr sb.Color3=accentCol sb.LineThickness=0.05 sb.SurfaceTransparency=1
+					table.insert(objs,sb)
+				end
+				if S.espCornerBox and head and hum then
+					bb=Instance.new("BillboardGui",espSg)
+					bb.Adornee=hrp2 bb.Size=UDim2.new(0,80,0,120) bb.StudsOffset=Vector3.new(0,0,0)
+					bb.AlwaysOnTop=true bb.LightInfluence=0
+					function mkCorner(x,y,w,h)
+						f=Instance.new("Frame",bb)
+						f.Size=UDim2.new(0,w,0,h) f.Position=UDim2.new(x,0,y,0)
+						f.BackgroundColor3=accentCol f.BorderSizePixel=0
+					end
+					mkCorner(0,0,20,3) mkCorner(0,0,3,20) mkCorner(1,-0,20,3) mkCorner(1,-3,3,20)
+					mkCorner(0,1,20,3) mkCorner(0,1,3,-20) mkCorner(1,1,20,3) mkCorner(1,-3,3,-20)
+					table.insert(objs,bb)
+				end
+				if S.espChams then
+					hl=Instance.new("Highlight",chr)
+					hl.FillColor=accentCol hl.OutlineColor=Color3.fromRGB(255,255,255)
+					hl.FillTransparency=0.55 hl.OutlineTransparency=0.1
+					table.insert(objs,hl)
+				end
+				if head and S.espName then
+					bb=Instance.new("BillboardGui",espSg)
+					bb.Adornee=head bb.Size=UDim2.new(0,140,0,38)
+					bb.StudsOffset=Vector3.new(0,2.5,0) bb.AlwaysOnTop=true
+					bg2=Instance.new("Frame",bb)
+					bg2.Size=UDim2.new(1,0,1,0) bg2.BackgroundColor3=Color3.fromRGB(0,0,0)
+					bg2.BackgroundTransparency=0.45 bg2.BorderSizePixel=0
+					Instance.new("UICorner",bg2).CornerRadius=UDim.new(0,4)
+					bar2=Instance.new("Frame",bg2)
+					bar2.Size=UDim2.new(0,3,1,0) bar2.BackgroundColor3=accentCol bar2.BorderSizePixel=0
+					nl=Instance.new("TextLabel",bg2)
+					nl.Size=UDim2.new(1,-8,0.55,0) nl.Position=UDim2.new(0,6,0,2)
+					nl.BackgroundTransparency=1 nl.Text=pl.Name nl.Font=Enum.Font.GothamBold nl.TextSize=13
+					nl.TextColor3=Color3.fromRGB(255,255,255) nl.TextXAlignment=Enum.TextXAlignment.Left
+					dl=Instance.new("TextLabel",bg2)
+					dl.Size=UDim2.new(1,-8,0.45,0) dl.Position=UDim2.new(0,6,0.55,0)
+					dl.BackgroundTransparency=1 dl.Text=dist.."st  "..math.floor(hp*100).."%"
+					dl.Font=Enum.Font.Code dl.TextSize=10 dl.TextColor3=hpColor(hp) dl.TextXAlignment=Enum.TextXAlignment.Left
+					table.insert(objs,bb)
+				end
+				if S.espHealth and hum then
+					bb3=Instance.new("BillboardGui",espSg)
+					bb3.Adornee=hrp2 bb3.Size=UDim2.new(0,5,0,48)
+					bb3.StudsOffset=Vector3.new(-2.4,0,0) bb3.AlwaysOnTop=true
+					bg3=Instance.new("Frame",bb3)
+					bg3.Size=UDim2.new(1,0,1,0) bg3.BackgroundColor3=Color3.fromRGB(15,15,15) bg3.BorderSizePixel=0
+					Instance.new("UICorner",bg3).CornerRadius=UDim.new(0,2)
+					hf=Instance.new("Frame",bg3)
+					hf.Size=UDim2.new(1,0,hp,0) hf.Position=UDim2.new(0,0,1-hp,0)
+					hf.BackgroundColor3=hpColor(hp) hf.BorderSizePixel=0
+					table.insert(objs,bb3)
+				end
+				if S.espDist and head then
+					dbb=Instance.new("BillboardGui",espSg)
+					dbb.Adornee=head dbb.Size=UDim2.new(0,60,0,14)
+					dbb.StudsOffset=Vector3.new(0,5.2,0) dbb.AlwaysOnTop=true
+					dl2=Instance.new("TextLabel",dbb)
+					dl2.Size=UDim2.new(1,0,1,0) dl2.BackgroundTransparency=1
+					dl2.Font=Enum.Font.Code dl2.TextSize=11 dl2.Text=dist.."st"
+					dl2.TextColor3=Color3.fromRGB(200,200,200) dl2.TextStrokeTransparency=0.3
+					table.insert(objs,dbb)
+				end
+				if S.espHeadCircle and head then
+					hbb=Instance.new("BillboardGui",espSg)
+					hbb.Adornee=head hbb.Size=UDim2.new(0,30,0,30)
+					hbb.StudsOffset=Vector3.new(0,0,0) hbb.AlwaysOnTop=true
+					hf=Instance.new("Frame",hbb)
+					hf.Size=UDim2.new(1,0,1,0) hf.BackgroundTransparency=1 hf.BorderSizePixel=0
+					hs=Instance.new("UIStroke",hf)
+					hs.Color=accentCol hs.Thickness=2
+					Instance.new("UICorner",hf).CornerRadius=UDim.new(1,0)
+					table.insert(objs,hbb)
+				end
+				if S.espHeadDot and head then
+					hbb2=Instance.new("BillboardGui",espSg)
+					hbb2.Adornee=head hbb2.Size=UDim2.new(0,8,0,8)
+					hbb2.StudsOffset=Vector3.new(0,0,0) hbb2.AlwaysOnTop=true
+					hdf=Instance.new("Frame",hbb2)
+					hdf.Size=UDim2.new(1,0,1,0) hdf.BackgroundColor3=accentCol hdf.BorderSizePixel=0
+					Instance.new("UICorner",hdf).CornerRadius=UDim.new(1,0)
+					table.insert(objs,hbb2)
+				end
+				if S.espSkeleton then
+					for _,pair in ipairs(SKELETON_JOINTS) do
+						p1=chr:FindFirstChild(pair[1]) p2=chr:FindFirstChild(pair[2])
+						if p1 and p2 then
+							obb=Instance.new("BillboardGui",espSg)
+							obb.Adornee=p1 obb.Size=UDim2.new(0,6,0,6) obb.AlwaysOnTop=true obb.LightInfluence=0
+							of=Instance.new("Frame",obb)
+							of.Size=UDim2.new(1,0,1,0) of.BackgroundColor3=accentCol of.BorderSizePixel=0
+							Instance.new("UICorner",of).CornerRadius=UDim.new(1,0)
+							table.insert(objs,obb)
+						end
+					end
+				end
+				espObjs[pl.UserId]=objs
+			end
+		end
+	end
+end
+
+chSg=Instance.new("ScreenGui",guiParent)
+chSg.Name="AeroCH" chSg.ResetOnSpawn=false
+pcall(function()chSg.IgnoreGuiInset=true end)
+chFrame=Instance.new("Frame",chSg)
+chFrame.Size=UDim2.new(0,200,0,200) chFrame.Position=UDim2.new(0.5,-100,0.5,-100)
+chFrame.BackgroundTransparency=1 chFrame.Visible=false chFrame.ZIndex=10
+chDot=Instance.new("Frame",chFrame)
+chDot.BackgroundColor3=chCol chDot.BorderSizePixel=0 chDot.ZIndex=11
+Instance.new("UICorner",chDot).CornerRadius=UDim.new(1,0)
+chLbl=Instance.new("TextLabel",chFrame)
+chLbl.Size=UDim2.new(1,0,0,13) chLbl.Position=UDim2.new(0,0,0.5,16)
+chLbl.BackgroundTransparency=1 chLbl.Text="aerodynamic.lua" chLbl.Font=Enum.Font.Code chLbl.TextSize=10
+chLbl.TextColor3=chCol chLbl.TextStrokeTransparency=0.3 chLbl.ZIndex=11
+chLines={}
+for i=1,4 do
+	l=Instance.new("Frame",chFrame) l.BackgroundColor3=chCol l.BorderSizePixel=0 l.ZIndex=11
+	Instance.new("UICorner",l).CornerRadius=UDim.new(0,1) chLines[i]=l
+end
+chOutlineLines={}
+for i=1,4 do
+	l=Instance.new("Frame",chFrame) l.BackgroundColor3=chOutlineCol l.BorderSizePixel=0 l.ZIndex=10
+	Instance.new("UICorner",l).CornerRadius=UDim.new(0,1) chOutlineLines[i]=l
+end
+chCircle=Instance.new("Frame",chFrame) chCircle.BackgroundTransparency=1 chCircle.ZIndex=11
+chCircleStroke=Instance.new("UIStroke",chCircle) chCircleStroke.Thickness=2
+Instance.new("UICorner",chCircle).CornerRadius=UDim.new(1,0)
+
+function redrawCH()
+	chFrame.Visible=S.ch if not S.ch then return end
+	s=chSize g=chGap+chBV th=chThick tr=1-chAlpha col=chCol
+	if chRainbow then chRainbowHue=(chRainbowHue+0.5)%360 col=Color3.fromHSV(chRainbowHue/360,1,1) end
+	if chPulse then
+		chAlpha=chAlpha+(chPulseDir*0.02)
+		if chAlpha>=1 then chPulseDir=-1 elseif chAlpha<=0.2 then chPulseDir=1 end
+		tr=1-chAlpha
+	end
+	for _,l in ipairs(chLines) do l.Visible=false l.BackgroundColor3=col l.BackgroundTransparency=tr end
+	for _,l in ipairs(chOutlineLines) do l.Visible=false l.BackgroundColor3=chOutlineCol l.BackgroundTransparency=tr end
+	chDot.BackgroundColor3=col chDot.BackgroundTransparency=tr
+	chLbl.TextColor3=col chCircle.Visible=false
+	chCircleStroke.Color=col chCircleStroke.Transparency=tr
+	function applyOutline(idx,w,h,x,y)
+		if not chOutline then return end
+		ol=chOutlineLines[idx] ol.Visible=true
+		ol.Size=UDim2.new(0,w+2,0,h+2)
+		ol.Position=UDim2.new(x.Scale,x.Offset-1,y.Scale,y.Offset-1)
+	end
+	if chStyle==1 then
+		for _,l in ipairs(chLines) do l.Visible=true end
+		chLines[1].Size=UDim2.new(0,s,0,th) chLines[1].Position=UDim2.new(0.5,g,0.5,-th/2)
+		chLines[2].Size=UDim2.new(0,s,0,th) chLines[2].Position=UDim2.new(0.5,-(g+s),0.5,-th/2)
+		chLines[3].Size=UDim2.new(0,th,0,s) chLines[3].Position=UDim2.new(0.5,-th/2,0.5,g)
+		chLines[4].Size=UDim2.new(0,th,0,s) chLines[4].Position=UDim2.new(0.5,-th/2,0.5,-(g+s))
+		applyOutline(1,s,th,UDim.new(0.5,g),UDim.new(0.5,-th/2))
+		applyOutline(2,s,th,UDim.new(0.5,-(g+s)),UDim.new(0.5,-th/2))
+		applyOutline(3,th,s,UDim.new(0.5,-th/2),UDim.new(0.5,g))
+		applyOutline(4,th,s,UDim.new(0.5,-th/2),UDim.new(0.5,-(g+s)))
+		chDot.Visible=true ds=th+2 chDot.Size=UDim2.new(0,ds,0,ds) chDot.Position=UDim2.new(0.5,-ds/2,0.5,-ds/2)
+	elseif chStyle==2 then
+		chLines[1].Visible=true chLines[2].Visible=true chLines[3].Visible=true
+		chLines[1].Size=UDim2.new(0,s,0,th) chLines[1].Position=UDim2.new(0.5,g,0.5,-th/2)
+		chLines[2].Size=UDim2.new(0,s,0,th) chLines[2].Position=UDim2.new(0.5,-(g+s),0.5,-th/2)
+		chLines[3].Size=UDim2.new(0,th,0,s) chLines[3].Position=UDim2.new(0.5,-th/2,0.5,g)
+		chDot.Visible=true ds=th+2 chDot.Size=UDim2.new(0,ds,0,ds) chDot.Position=UDim2.new(0.5,-ds/2,0.5,-ds/2)
+	elseif chStyle==3 then
+		chDot.Visible=true ds=math.max(th*3,4) chDot.Size=UDim2.new(0,ds,0,ds) chDot.Position=UDim2.new(0.5,-ds/2,0.5,-ds/2)
+	elseif chStyle==4 then
+		chCircle.Visible=true cr=s+g
+		chCircle.Size=UDim2.new(0,cr*2,0,cr*2) chCircle.Position=UDim2.new(0.5,-cr,0.5,-cr)
+		chCircleStroke.Thickness=th
+		chDot.Visible=true ds=th+2 chDot.Size=UDim2.new(0,ds,0,ds) chDot.Position=UDim2.new(0.5,-ds/2,0.5,-ds/2)
+	elseif chStyle==5 then
+		cs=math.floor(s/2)
+		chLines[1].Visible=true chLines[2].Visible=true chLines[3].Visible=true chLines[4].Visible=true
+		chLines[1].Size=UDim2.new(0,cs,0,th) chLines[1].Position=UDim2.new(0.5,g,0.5,-(g+cs))
+		chLines[2].Size=UDim2.new(0,cs,0,th) chLines[2].Position=UDim2.new(0.5,-(g+cs),0.5,-(g+cs))
+		chLines[3].Size=UDim2.new(0,cs,0,th) chLines[3].Position=UDim2.new(0.5,g,0.5,g)
+		chLines[4].Size=UDim2.new(0,cs,0,th) chLines[4].Position=UDim2.new(0.5,-(g+cs),0.5,g)
+	elseif chStyle==6 then
+		chLines[1].Visible=true chLines[2].Visible=true
+		chLines[1].Size=UDim2.new(0,s*2,0,th) chLines[1].Position=UDim2.new(0.5,-s,0.5,-th/2) chLines[1].Rotation=45
+		chLines[2].Size=UDim2.new(0,s*2,0,th) chLines[2].Position=UDim2.new(0.5,-s,0.5,-th/2) chLines[2].Rotation=-45
+	elseif chStyle==7 then
+		chLines[1].Visible=true chLines[2].Visible=true chLines[3].Visible=true
+		chLines[1].Size=UDim2.new(0,th,0,s) chLines[1].Position=UDim2.new(0.5,-th/2,0.5,-(g+s))
+		chLines[2].Size=UDim2.new(0,s,0,th) chLines[2].Position=UDim2.new(0.5,-s,0.5,-th/2-g) chLines[2].Rotation=45
+		chLines[3].Size=UDim2.new(0,s,0,th) chLines[3].Position=UDim2.new(0.5,0,0.5,-th/2-g) chLines[3].Rotation=-45
+	elseif chStyle==8 then
+		chCircle.Visible=true cr=s+g
+		chCircle.Size=UDim2.new(0,cr*2,0,cr*2) chCircle.Position=UDim2.new(0.5,-cr,0.5,-cr)
+		chCircleStroke.Thickness=th chDot.Visible=false
+	end
+end
+
+fovSg=Instance.new("ScreenGui",guiParent)
+fovSg.Name="AeroFOV" fovSg.ResetOnSpawn=false
+pcall(function()fovSg.IgnoreGuiInset=true end)
+fovCircle=Instance.new("Frame",fovSg)
+fovCircle.Size=UDim2.new(0,saFOV*2,0,saFOV*2)
+fovCircle.Position=UDim2.new(0.5,-saFOV,0.5,-saFOV)
+fovCircle.BackgroundTransparency=1 fovCircle.ZIndex=9 fovCircle.Visible=false
+Instance.new("UICorner",fovCircle).CornerRadius=UDim.new(1,0)
+fovStroke=Instance.new("UIStroke",fovCircle)
+fovStroke.Color=fovColor fovStroke.Thickness=1.5 fovStroke.Transparency=0.3
+
+function updateFOVStyle()
+	if fovMode=="outline" then fovCircle.BackgroundTransparency=1 fovStroke.Thickness=1.5 fovStroke.Transparency=0.3
+	elseif fovMode=="full" then fovCircle.BackgroundColor3=fovColor fovCircle.BackgroundTransparency=0.75 fovStroke.Thickness=1.5 fovStroke.Transparency=0.2
+	elseif fovMode=="on" then fovCircle.BackgroundTransparency=1 fovStroke.Thickness=2 fovStroke.Transparency=0 end
+	fovStroke.Color=fovColor fovCircle.BackgroundColor3=fovColor
+end
+
+tracerF=Instance.new("Frame",notifSg)
+tracerF.BackgroundColor3=accentCol tracerF.BorderSizePixel=0 tracerF.ZIndex=8 tracerF.Visible=false
+function updateTracer()
+	if not S.espTracer then tracerF.Visible=false return end
+	e=getAny() if not e then tracerF.Visible=false return end
+	ehrp2=e:FindFirstChild("HumanoidRootPart") if not ehrp2 then tracerF.Visible=false return end
+	cam2=workspace.CurrentCamera if not cam2 then return end
+	sp2,vis=cam2:WorldToScreenPoint(ehrp2.Position)
+	if not vis then tracerF.Visible=false return end
+	vp=cam2.ViewportSize
+	dx=sp2.X-vp.X/2 dy=sp2.Y-vp.Y
+	tracerF.Visible=true
+	tracerF.Size=UDim2.new(0,math.sqrt(dx*dx+dy*dy),0,1)
+	tracerF.Position=UDim2.new(0,vp.X/2,0,vp.Y)
+	tracerF.Rotation=math.deg(math.atan2(dy,dx))
+end
+
+function setWorld(on2,brightness,clockTime,ambient,outdoorAmbient,fogEnd,fogColor)
+	pcall(function()
+		l=game:GetService("Lighting")
+		if on2 then
+			l.Brightness=brightness l.ClockTime=clockTime
+			l.Ambient=ambient l.OutdoorAmbient=outdoorAmbient
+			l.FogEnd=fogEnd l.FogColor=fogColor
+		else
+			l.Brightness=2 l.ClockTime=14
+			l.Ambient=Color3.fromRGB(70,70,70) l.OutdoorAmbient=Color3.fromRGB(127,127,127)
+			l.FogEnd=100000
+		end
+	end)
+end
+
+function buildStudsUI()
+	if studsUIRef then studsUIRef:Destroy() studsUIRef=nil end
+	if studsUIUpdateConn then studsUIUpdateConn:Disconnect() studsUIUpdateConn=nil end
+	if not S.studsUI then return end
+	studsSg=Instance.new("ScreenGui",guiParent)
+	studsSg.Name="AeroStuds" studsSg.ResetOnSpawn=false
+	pcall(function()studsSg.IgnoreGuiInset=true end)
+	studsUIRef=studsSg
+	shadow=Instance.new("Frame",studsSg)
+	shadow.Size=UDim2.new(0,232,0,148) shadow.Position=UDim2.new(1,-246,0,8)
+	shadow.BackgroundColor3=Color3.fromRGB(0,0,0) shadow.BackgroundTransparency=0.35 shadow.BorderSizePixel=0 shadow.ZIndex=49
+	Instance.new("UICorner",shadow).CornerRadius=UDim.new(0,9)
+	mainF=Instance.new("Frame",studsSg)
+	mainF.Size=UDim2.new(0,228,0,144) mainF.Position=UDim2.new(1,-244,0,10)
+	mainF.BackgroundColor3=Color3.fromRGB(14,14,14) mainF.BorderSizePixel=0 mainF.ZIndex=50
+	Instance.new("UICorner",mainF).CornerRadius=UDim.new(0,8)
+	mainStroke=Instance.new("UIStroke",mainF) mainStroke.Color=Color3.fromRGB(35,35,35) mainStroke.Thickness=1
+	topBar=Instance.new("Frame",mainF)
+	topBar.Size=UDim2.new(1,0,0,30) topBar.BackgroundColor3=Color3.fromRGB(10,10,10) topBar.BorderSizePixel=0 topBar.ZIndex=51
+	Instance.new("UICorner",topBar).CornerRadius=UDim.new(0,8)
+	accBar=Instance.new("Frame",topBar)
+	accBar.Size=UDim2.new(1,0,0,2) accBar.Position=UDim2.new(0,0,1,-2) accBar.BackgroundColor3=accentCol accBar.BorderSizePixel=0 accBar.ZIndex=52
+	titleLbl=Instance.new("TextLabel",topBar)
+	titleLbl.Size=UDim2.new(1,-8,1,0) titleLbl.Position=UDim2.new(0,8,0,0) titleLbl.BackgroundTransparency=1
+	titleLbl.Text="aerodynamic  •  studs" titleLbl.Font=Enum.Font.GothamBold titleLbl.TextSize=12
+	titleLbl.TextColor3=Color3.fromRGB(200,200,200) titleLbl.TextXAlignment=Enum.TextXAlignment.Left titleLbl.ZIndex=52
+	sDn,sDi,sDS2,sSP2=false,nil,nil,nil
+	mainF.InputBegan:Connect(function(i)
+		if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
+			sDn=true sDS2=i.Position sSP2=mainF.Position
+			i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then sDn=false end end)
+		end
+	end)
+	mainF.InputChanged:Connect(function(i)
+		if i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch then sDi=i end
+	end)
+	uis.InputChanged:Connect(function(i)
+		if i==sDi and sDn then
+			d=i.Position-sDS2
+			mainF.Position=UDim2.new(sSP2.X.Scale,sSP2.X.Offset+d.X,sSP2.Y.Scale,sSP2.Y.Offset+d.Y)
+			shadow.Position=UDim2.new(sSP2.X.Scale,sSP2.X.Offset+d.X-2,sSP2.Y.Scale,sSP2.Y.Offset+d.Y-2)
+		end
+	end)
+	content=Instance.new("Frame",mainF)
+	content.Size=UDim2.new(1,-16,1,-38) content.Position=UDim2.new(0,8,0,34) content.BackgroundTransparency=1 content.ZIndex=51
+	rowData={
+		{label="Position X",key="X",col=Color3.fromRGB(255,80,80)},
+		{label="Position Y",key="Y",col=Color3.fromRGB(80,220,80)},
+		{label="Position Z",key="Z",col=Color3.fromRGB(80,150,255)},
+		{label="Velocity",key="V",col=Color3.fromRGB(255,200,0)},
+		{label="Distance",key="D",col=Color3.fromRGB(200,100,255)},
+	}
+	valLabels={}
+	for i,rd in ipairs(rowData) do
+		row=Instance.new("Frame",content)
+		row.Size=UDim2.new(1,0,0,18) row.Position=UDim2.new(0,0,0,(i-1)*21)
+		row.BackgroundColor3=Color3.fromRGB(22,22,22) row.BorderSizePixel=0 row.ZIndex=52
+		Instance.new("UICorner",row).CornerRadius=UDim.new(0,4)
+		acc=Instance.new("Frame",row) acc.Size=UDim2.new(0,3,1,0) acc.BackgroundColor3=rd.col acc.BorderSizePixel=0 acc.ZIndex=53
+		lbl=Instance.new("TextLabel",row) lbl.Size=UDim2.new(0,80,1,0) lbl.Position=UDim2.new(0,7,0,0)
+		lbl.BackgroundTransparency=1 lbl.Text=rd.label lbl.Font=Enum.Font.GothamBold lbl.TextSize=11
+		lbl.TextColor3=rd.col lbl.TextXAlignment=Enum.TextXAlignment.Left lbl.ZIndex=53
+		val=Instance.new("TextLabel",row) val.Size=UDim2.new(1,-86,1,0) val.Position=UDim2.new(0,84,0,0)
+		val.BackgroundTransparency=1 val.Font=Enum.Font.Code val.TextSize=11
+		val.TextColor3=Color3.fromRGB(210,210,210) val.TextXAlignment=Enum.TextXAlignment.Left val.ZIndex=53
+		valLabels[rd.key]=val
+	end
+	studsUIUpdateConn=rs.RenderStepped:Connect(function()
+		pcall(function()
+			if not S.studsUI then return end
+			chr2=lp.Character hrp2=chr2 and chr2:FindFirstChild("HumanoidRootPart")
+			if hrp2 then
+				pos=hrp2.Position vel=hrp2.AssemblyLinearVelocity
+				nearest,_=getNearest() dist=0
+				if nearest then
+					nhrp=nearest:FindFirstChild("HumanoidRootPart")
+					if nhrp then dist=math.floor((nhrp.Position-pos).Magnitude) end
+				end
+				if valLabels["X"] then valLabels["X"].Text=string.format("%.1f st",pos.X) end
+				if valLabels["Y"] then valLabels["Y"].Text=string.format("%.1f st",pos.Y) end
+				if valLabels["Z"] then valLabels["Z"].Text=string.format("%.1f st",pos.Z) end
+				if valLabels["V"] then valLabels["V"].Text=string.format("%.1f st/s",vel.Magnitude) end
+				if valLabels["D"] then valLabels["D"].Text=dist>0 and (dist.." st") or "none" end
+			end
+		end)
+	end)
+end
+
+Library=nil
+libOk,libErr=pcall(function()
+	Library=loadstring(game:HttpGet("https://raw.githubusercontent.com/WEFGQERQEGWGE/a/refs/heads/main/1.txt"))()
+end)
+if not libOk or not Library then
+	Library={
+		CreateWindow=function(self,info)
+			win={Tabs={}}
+			stub={
+				AddLeftGroupbox=function(self2,n)
+					g={}
+					function g:AddToggle(id,i) t={Value=false,SetValue=function(self3,v) self3.Value=v if i and i.Callback then i.Callback(v) end end} return t end
+					function g:AddSlider() return {} end
+					function g:AddDropdown() return {} end
+					function g:AddInput() return {} end
+					function g:AddButton(i) return {} end
+					function g:AddLabel() return {SetText=function()end} end
+					function g:AddDivider() return {} end
+					function g:AddKeyPicker() return g end
+					setmetatable(g,{__index=function()return function()return g end end})
+					return g
+				end
+			}
+			stub.AddRightGroupbox=stub.AddLeftGroupbox
+			function win:AddTab() return stub end
+			return win
+		end,
+		Notify=function(self,info)end,Toggle=function(self)end,
+		ToggleKeybind=Enum.KeyCode.RightShift,Toggles={},Options={},
+	}
+	warn("aerodynamic: ui lib failed - "..tostring(libErr))
+end
+libraryReady=true
+
+Window=Library:CreateWindow({
+	Title="aerodynamic | rivals",Footer="aerodynamic.lua",
+	Size=UDim2.fromOffset(640,520),ToggleKeybind=Enum.KeyCode.RightShift,NotifySide="Right",
+})
+
+showHit=function(txt,isKill)
+	if isKill then if not S.killNotify then return end
+	else if not S.hitNotify then return end end
+	if libraryReady then pcall(function()Library:Notify({Title=isKill and "kill" or "hit",Description=txt,Time=2})end) end
+end
+
+XYZhud=Instance.new("ScreenGui",guiParent)
+XYZhud.Name="AeroXYZ" XYZhud.ResetOnSpawn=false XYZhud.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
+pcall(function()XYZhud.IgnoreGuiInset=true end)
+xyzShadow=Instance.new("Frame",XYZhud)
+xyzShadow.Size=UDim2.new(0,202,0,106) xyzShadow.Position=UDim2.new(0,8,0.5,-53)
+xyzShadow.BackgroundColor3=Color3.fromRGB(0,0,0) xyzShadow.BackgroundTransparency=0.4 xyzShadow.BorderSizePixel=0 xyzShadow.ZIndex=49
+Instance.new("UICorner",xyzShadow).CornerRadius=UDim.new(0,8)
+xyzF=Instance.new("Frame",XYZhud)
+xyzF.Size=UDim2.new(0,198,0,102) xyzF.Position=UDim2.new(0,10,0.5,-51)
+xyzF.BackgroundColor3=Color3.fromRGB(18,18,18) xyzF.BackgroundTransparency=0 xyzF.BorderSizePixel=0 xyzF.ZIndex=50 xyzF.Visible=false
+Instance.new("UICorner",xyzF).CornerRadius=UDim.new(0,7)
+xyzOutline=Instance.new("UIStroke",xyzF) xyzOutline.Color=Color3.fromRGB(40,40,40) xyzOutline.Thickness=1
+xyzTopBar=Instance.new("Frame",xyzF)
+xyzTopBar.Size=UDim2.new(1,0,0,28) xyzTopBar.BackgroundColor3=Color3.fromRGB(12,12,12) xyzTopBar.BorderSizePixel=0 xyzTopBar.ZIndex=51
+Instance.new("UICorner",xyzTopBar).CornerRadius=UDim.new(0,7)
+xyzAcc=Instance.new("Frame",xyzTopBar)
+xyzAcc.Size=UDim2.new(1,0,0,2) xyzAcc.Position=UDim2.new(0,0,1,-2) xyzAcc.BackgroundColor3=accentCol xyzAcc.BorderSizePixel=0 xyzAcc.ZIndex=52
+xyzTitle=Instance.new("TextLabel",xyzTopBar)
+xyzTitle.Size=UDim2.new(1,-8,1,0) xyzTitle.Position=UDim2.new(0,8,0,0) xyzTitle.BackgroundTransparency=1
+xyzTitle.Text="aerodynamic  •  xyz" xyzTitle.Font=Enum.Font.GothamBold xyzTitle.TextSize=12
+xyzTitle.TextColor3=Color3.fromRGB(200,200,200) xyzTitle.TextXAlignment=Enum.TextXAlignment.Left xyzTitle.ZIndex=52
+xyzContent=Instance.new("Frame",xyzF)
+xyzContent.Size=UDim2.new(1,0,1,-28) xyzContent.Position=UDim2.new(0,0,0,28) xyzContent.BackgroundTransparency=1 xyzContent.ZIndex=51
+function makeXYZRow(parent,label,ypos,col)
+	row=Instance.new("Frame",parent)
+	row.Size=UDim2.new(1,-16,0,18) row.Position=UDim2.new(0,8,0,ypos)
+	row.BackgroundColor3=Color3.fromRGB(26,26,26) row.BorderSizePixel=0 row.ZIndex=52
+	Instance.new("UICorner",row).CornerRadius=UDim.new(0,4)
+	acc=Instance.new("Frame",row) acc.Size=UDim2.new(0,3,1,0) acc.BackgroundColor3=col acc.BorderSizePixel=0 acc.ZIndex=53
+	lbl=Instance.new("TextLabel",row) lbl.Size=UDim2.new(0,14,1,0) lbl.Position=UDim2.new(0,6,0,0) lbl.BackgroundTransparency=1 lbl.Text=label lbl.Font=Enum.Font.GothamBold lbl.TextSize=11 lbl.TextColor3=col lbl.ZIndex=53
+	val=Instance.new("TextLabel",row) val.Size=UDim2.new(1,-24,1,0) val.Position=UDim2.new(0,22,0,0) val.BackgroundTransparency=1 val.Font=Enum.Font.Code val.TextSize=11 val.TextColor3=Color3.fromRGB(200,200,200) val.TextXAlignment=Enum.TextXAlignment.Left val.ZIndex=53
+	return val
+end
+xyzX=makeXYZRow(xyzContent,"X",4,Color3.fromRGB(255,80,80))
+xyzY=makeXYZRow(xyzContent,"Y",26,Color3.fromRGB(80,220,80))
+xyzZ=makeXYZRow(xyzContent,"Z",48,Color3.fromRGB(80,150,255))
+xDn,xDi,xDs,xSp=nil,nil,nil,nil
+xyzF.InputBegan:Connect(function(i)
+	if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
+		xDn=true xDs=i.Position xSp=xyzF.Position
+		i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then xDn=false end end)
+	end
+end)
+xyzF.InputChanged:Connect(function(i)
+	if i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch then xDi=i end
+end)
+uis.InputChanged:Connect(function(i)
+	if i==xDi and xDn then
+		d=i.Position-xDs
+		xyzF.Position=UDim2.new(xSp.X.Scale,xSp.X.Offset+d.X,xSp.Y.Scale,xSp.Y.Offset+d.Y)
+		xyzShadow.Position=UDim2.new(xSp.X.Scale,xSp.X.Offset+d.X-2,xSp.Y.Scale,xSp.Y.Offset+d.Y-2)
+	end
+end)
+
+-- helper: apply modifiers to xyz for void/orbit
+function applyVSModifiers(x,y,z)
+	if vsNoiseX~=0 then x=x+(math.random()-0.5)*vsNoiseX*2 end
+	if vsNoiseY~=0 then y=y+(math.random()-0.5)*vsNoiseY*2 end
+	if vsNoiseZ~=0 then z=z+(math.random()-0.5)*vsNoiseZ*2 end
+	x=x*vsScaleX+vsOffsetX
+	y=y*vsScaleY+vsOffsetY
+	z=z*vsScaleZ+vsOffsetZ
+	if vsPulseAmt~=0 then
+		vsPulseT=(vsPulseT+0.1)%(math.pi*2)
+		local pv=math.sin(vsPulseT)*vsPulseAmt
+		x=x+pv y=y+pv z=z+pv
+	end
+	if vsWaveAmt~=0 then
+		vsWaveT=(vsWaveT+0.08)%(math.pi*2)
+		x=x+math.sin(vsWaveT)*vsWaveAmt
+		z=z+math.cos(vsWaveT)*vsWaveAmt
+	end
+	if vsInvertX then x=-x end
+	if vsInvertZ then z=-z end
+	if vsSwapXZ then x,z=z,x end
+	if vsAbsCoords then x=math.abs(x) y=math.abs(y) z=math.abs(z) end
+	if vsLockY then y=vsLockYVal end
+	return x,y,z
+end
+
+function applyORBModifiers(x,y,z)
+	if orbNoiseX~=0 then x=x+(math.random()-0.5)*orbNoiseX*2 end
+	if orbNoiseY~=0 then y=y+(math.random()-0.5)*orbNoiseY*2 end
+	if orbNoiseZ~=0 then z=z+(math.random()-0.5)*orbNoiseZ*2 end
+	x=x*orbScaleX+orbOffsetX
+	y=y*orbScaleY+orbOffsetY
+	z=z*orbScaleZ+orbOffsetZ
+	if orbPulseAmt~=0 then
+		orbPulseT=(orbPulseT+0.1)%(math.pi*2)
+		local pv=math.sin(orbPulseT)*orbPulseAmt
+		x=x+pv y=y+pv z=z+pv
+	end
+	if orbWaveAmt~=0 then
+		orbWaveT=(orbWaveT+0.08)%(math.pi*2)
+		x=x+math.sin(orbWaveT)*orbWaveAmt
+		z=z+math.cos(orbWaveT)*orbWaveAmt
+	end
+	if orbInvertX then x=-x end
+	if orbInvertZ then z=-z end
+	if orbSwapXZ then x,z=z,x end
+	if orbAbsCoords then x=math.abs(x) y=math.abs(y) z=math.abs(z) end
+	if orbLockY then y=orbLockYVal end
+	return x,y,z
+end
+
+-- ============================
+-- MOVEMENT TAB
+-- ============================
+MovTab=Window:AddTab("Movement","move")
+MovL=MovTab:AddLeftGroupbox("Void Spam")
+MovR=MovTab:AddRightGroupbox("Orbit")
+
+-- VOID SPAM
+MovL:AddToggle("voidSpam",{Text="Void Spam",Default=false,Callback=function(v)
+	S.void=v
+	if not v and savedNormalPos then
+		pcall(function()
+			chr2=lp.Character hrp2=chr2 and chr2:FindFirstChild("HumanoidRootPart")
+			if hrp2 then hrp2.CFrame=savedNormalPos end
+		end)
+		savedNormalPos=nil
+	end
+	xyzF.Visible=v
+end})
+MovL:AddSlider("vsSpd",{Text="Speed (lower=faster)",Min=0.001,Max=1,Default=0.016,Rounding=3,Suffix="s",Callback=function(v)vsSpeed=v end})
+MovL:AddDivider()
+
+-- Pattern
+MovL:AddDropdown("vsPatD",{Text="Pattern",Values={
+	"everywhere","void","random","static","custom",
+	"circular","spiral","figure8","zigzag","sine",
+	"grid","cluster","vortex","explosion","desync",
+	"bounce","wave","helix","star","galaxy",
+	"matrix","strafe","cross","diamond","tornado",
+	"pendulum","random3d","sphere","cube","noise",
+},Default="everywhere",Callback=function(v)vsPattern=v end})
+
+MovL:AddDivider()
+MovL:AddLabel("── Coordinates ──")
+MovL:AddInput("vsCustomXI",{Text="Custom X",Default="0",Numeric=true,Placeholder="0",Callback=function(v)n=tonumber(v) if n then vsCustomX=n end end})
+MovL:AddInput("vsCustomYI",{Text="Custom Y",Default="-20184869458",Numeric=true,Placeholder="-20184869458",Callback=function(v)n=tonumber(v) if n then vsCustomY=n end end})
+MovL:AddInput("vsCustomZI",{Text="Custom Z",Default="0",Numeric=true,Placeholder="0",Callback=function(v)n=tonumber(v) if n then vsCustomZ=n end end})
+MovL:AddDivider()
+MovL:AddLabel("── Static Coords ──")
+MovL:AddInput("vsStatXI",{Text="Static X",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsStaticX=n end end})
+MovL:AddInput("vsStatYI",{Text="Static Y",Default="-20184869458",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsStaticY=n end end})
+MovL:AddInput("vsStatZI",{Text="Static Z",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsStaticZ=n end end})
+MovL:AddDivider()
+MovL:AddLabel("── Y Control ──")
+MovL:AddInput("vsStartYI",{Text="Start Y",Default="-20184869458",Numeric=true,Placeholder="-20184869458",Callback=function(v)n=tonumber(v) if n then vsYCustom=n vsYCurrent=n end end})
+MovL:AddInput("vsYIncrI",{Text="Y Rise Per TP",Default="500000",Numeric=true,Placeholder="500000",Callback=function(v)n=tonumber(v) if n then vsYIncrement=n end end})
+MovL:AddToggle("vsYIncrT",{Text="Auto Rise Y",Default=true,Callback=function(v)vsYIncrEnabled=v end})
+MovL:AddSlider("vsBoostYS",{Text="Y Boost",Min=-1000000000,Max=1000000000,Default=0,Rounding=0,Suffix="st",Callback=function(v)vsBoostY=v end})
+MovL:AddToggle("vsLockYT",{Text="Lock Y",Default=false,Callback=function(v)vsLockY=v end})
+MovL:AddInput("vsLockYVI",{Text="Lock Y Value",Default="-20184869458",Numeric=true,Placeholder="-20184869458",Callback=function(v)n=tonumber(v) if n then vsLockYVal=n end end})
+MovL:AddButton({Text="Reset Y to Start",Callback=function()vsYCurrent=vsYCustom end})
+MovL:AddDivider()
+MovL:AddLabel("── Range ──")
+MovL:AddInput("vsXDistI",{Text="X Range",Default="1000000000",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsXDist=n end end})
+MovL:AddInput("vsYDistI",{Text="Y Range",Default="5000000000",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsYDist=n end end})
+MovL:AddInput("vsZDistI",{Text="Z Range",Default="1000000000",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsZDist=n end end})
+MovL:AddSlider("vsRadS",{Text="Radius",Min=1,Max=1000000000,Default=1000000000,Rounding=0,Suffix="st",Callback=function(v)vsRadius=v end})
+MovL:AddDivider()
+MovL:AddLabel("── Modifiers ──")
+MovL:AddSlider("vsNoiseXS",{Text="Noise X",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)vsNoiseX=v end})
+MovL:AddSlider("vsNoiseYS",{Text="Noise Y",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)vsNoiseY=v end})
+MovL:AddSlider("vsNoiseZS",{Text="Noise Z",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)vsNoiseZ=v end})
+MovL:AddSlider("vsScaleXS",{Text="Scale X",Min=0.01,Max=100,Default=1,Rounding=2,Callback=function(v)vsScaleX=v end})
+MovL:AddSlider("vsScaleYS",{Text="Scale Y",Min=0.01,Max=100,Default=1,Rounding=2,Callback=function(v)vsScaleY=v end})
+MovL:AddSlider("vsScaleZS",{Text="Scale Z",Min=0.01,Max=100,Default=1,Rounding=2,Callback=function(v)vsScaleZ=v end})
+MovL:AddInput("vsOffXI",{Text="Offset X",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsOffsetX=n end end})
+MovL:AddInput("vsOffYI",{Text="Offset Y",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsOffsetY=n end end})
+MovL:AddInput("vsOffZI",{Text="Offset Z",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then vsOffsetZ=n end end})
+MovL:AddSlider("vsPulseS",{Text="Pulse Amount",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)vsPulseAmt=v end})
+MovL:AddSlider("vsWaveS",{Text="Wave Amount",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)vsWaveAmt=v end})
+MovL:AddDivider()
+MovL:AddLabel("── Flags ──")
+MovL:AddToggle("vsInvXT",{Text="Invert X",Default=false,Callback=function(v)vsInvertX=v end})
+MovL:AddToggle("vsInvZT",{Text="Invert Z",Default=false,Callback=function(v)vsInvertZ=v end})
+MovL:AddToggle("vsSwapXZT",{Text="Swap X/Z",Default=false,Callback=function(v)vsSwapXZ=v end})
+MovL:AddToggle("vsAbsT",{Text="Absolute Coords",Default=false,Callback=function(v)vsAbsCoords=v end})
+MovL:AddToggle("vsFreezeT",{Text="Freeze After TP",Default=false,Callback=function(v)vsFreeze=v end})
+MovL:AddToggle("vsNoclipT",{Text="Noclip While Active",Default=false,Callback=function(v)vsNoclip=v end})
+MovL:AddDivider()
+MovL:AddLabel("── Multi-TP ──")
+MovL:AddToggle("vsMultiT",{Text="Multi TP Per Tick",Default=false,Callback=function(v)vsMultiTP=v end})
+MovL:AddSlider("vsMultiCntS",{Text="Multi Count",Min=2,Max=20,Default=3,Rounding=0,Callback=function(v)vsMultiCount=v end})
+MovL:AddSlider("vsMultiDelS",{Text="Multi Delay",Min=0,Max=0.05,Default=0.002,Rounding=3,Suffix="s",Callback=function(v)vsMultiDelay=v end})
+
+-- ORBIT
+MovR:AddToggle("orbitT",{Text="Orbit",Default=false,Callback=function(v)
+	S.orbit=v
+	if not v and savedOrbitPos then
+		pcall(function()
+			chr2=lp.Character hrp2=chr2 and chr2:FindFirstChild("HumanoidRootPart")
+			if hrp2 then hrp2.CFrame=savedOrbitPos end
+		end)
+		savedOrbitPos=nil
+	end
+end})
+MovR:AddSlider("orbSpd",{Text="Speed (lower=faster)",Min=0.001,Max=1,Default=0.016,Rounding=3,Suffix="s",Callback=function(v)orbSpeed=v end})
+MovR:AddDivider()
+
+MovR:AddDropdown("orbPatD",{Text="Pattern",Values={
+	"everywhere","void","random","static","custom",
+	"circular","figure8","spiral","zigzag","helix",
+	"square","triangle","target","vortex","desync",
+	"bounce","wave","cross","diamond","tornado",
+	"pendulum","random3d","sphere","cube","noise",
+	"star","galaxy","matrix","strafe","ellipse",
+},Default="everywhere",Callback=function(v)orbPattern=v end})
+MovR:AddDropdown("orbTargD",{Text="Target",Values={"nearest","random","all","self","furthest"},Default="nearest",Callback=function(v)orbTarget=v end})
+MovR:AddDivider()
+MovR:AddLabel("── Coordinates ──")
+MovR:AddInput("orbCustomXI",{Text="Custom X",Default="0",Numeric=true,Placeholder="0",Callback=function(v)n=tonumber(v) if n then orbCustomX=n end end})
+MovR:AddInput("orbCustomYI",{Text="Custom Y",Default="-20184869458",Numeric=true,Placeholder="-20184869458",Callback=function(v)n=tonumber(v) if n then orbCustomY=n end end})
+MovR:AddInput("orbCustomZI",{Text="Custom Z",Default="0",Numeric=true,Placeholder="0",Callback=function(v)n=tonumber(v) if n then orbCustomZ=n end end})
+MovR:AddDivider()
+MovR:AddLabel("── Static Coords ──")
+MovR:AddInput("orbStatXI",{Text="Static X",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbStaticX=n end end})
+MovR:AddInput("orbStatYI",{Text="Static Y",Default="-20184869458",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbStaticY=n end end})
+MovR:AddInput("orbStatZI",{Text="Static Z",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbStaticZ=n end end})
+MovR:AddDivider()
+MovR:AddLabel("── Y Control ──")
+MovR:AddInput("orbStartYI",{Text="Start Y",Default="-20184869458",Numeric=true,Placeholder="-20184869458",Callback=function(v)n=tonumber(v) if n then orbYCustom=n orbYCurrent=n end end})
+MovR:AddInput("orbYIncrI",{Text="Y Rise Per TP",Default="500000",Numeric=true,Placeholder="500000",Callback=function(v)n=tonumber(v) if n then orbYIncrement=n end end})
+MovR:AddToggle("orbYIncrT",{Text="Auto Rise Y",Default=false,Callback=function(v)orbYIncrEnabled=v end})
+MovR:AddSlider("orbBoostYS",{Text="Y Boost",Min=-1000000000,Max=1000000000,Default=0,Rounding=0,Suffix="st",Callback=function(v)orbBoostY=v end})
+MovR:AddToggle("orbLockYT",{Text="Lock Y",Default=false,Callback=function(v)orbLockY=v end})
+MovR:AddInput("orbLockYVI",{Text="Lock Y Value",Default="-20184869458",Numeric=true,Placeholder="-20184869458",Callback=function(v)n=tonumber(v) if n then orbLockYVal=n end end})
+MovR:AddButton({Text="Reset Orbit Y",Callback=function()orbYCurrent=orbYCustom end})
+MovR:AddDivider()
+MovR:AddLabel("── Range ──")
+MovR:AddInput("orbXDistI",{Text="X Range",Default="27000000",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbXDist=n end end})
+MovR:AddInput("orbYDistI",{Text="Y Range",Default="20000000",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbYDist=n end end})
+MovR:AddInput("orbZDistI",{Text="Z Range",Default="25000000",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbZDist=n end end})
+MovR:AddSlider("orbRadS",{Text="Orbit Radius",Min=1,Max=5000,Default=50,Rounding=0,Suffix="st",Callback=function(v)orbRadius=v end})
+MovR:AddSlider("orbHtS",{Text="Height Offset",Min=-1000,Max=1000,Default=5,Rounding=0,Suffix="st",Callback=function(v)orbHeight=v end})
+MovR:AddDivider()
+MovR:AddLabel("── Modifiers ──")
+MovR:AddSlider("orbNoiseXS",{Text="Noise X",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)orbNoiseX=v end})
+MovR:AddSlider("orbNoiseYS",{Text="Noise Y",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)orbNoiseY=v end})
+MovR:AddSlider("orbNoiseZS",{Text="Noise Z",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)orbNoiseZ=v end})
+MovR:AddSlider("orbScaleXS",{Text="Scale X",Min=0.01,Max=100,Default=1,Rounding=2,Callback=function(v)orbScaleX=v end})
+MovR:AddSlider("orbScaleYS",{Text="Scale Y",Min=0.01,Max=100,Default=1,Rounding=2,Callback=function(v)orbScaleY=v end})
+MovR:AddSlider("orbScaleZS",{Text="Scale Z",Min=0.01,Max=100,Default=1,Rounding=2,Callback=function(v)orbScaleZ=v end})
+MovR:AddInput("orbOffXI",{Text="Offset X",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbOffsetX=n end end})
+MovR:AddInput("orbOffYI",{Text="Offset Y",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbOffsetY=n end end})
+MovR:AddInput("orbOffZI",{Text="Offset Z",Default="0",Numeric=true,Placeholder="studs",Callback=function(v)n=tonumber(v) if n then orbOffsetZ=n end end})
+MovR:AddSlider("orbPulseS",{Text="Pulse Amount",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)orbPulseAmt=v end})
+MovR:AddSlider("orbWaveS",{Text="Wave Amount",Min=0,Max=10000000,Default=0,Rounding=0,Callback=function(v)orbWaveAmt=v end})
+MovR:AddDivider()
+MovR:AddLabel("── Flags ──")
+MovR:AddToggle("orbInvXT",{Text="Invert X",Default=false,Callback=function(v)orbInvertX=v end})
+MovR:AddToggle("orbInvZT",{Text="Invert Z",Default=false,Callback=function(v)orbInvertZ=v end})
+MovR:AddToggle("orbSwapXZT",{Text="Swap X/Z",Default=false,Callback=function(v)orbSwapXZ=v end})
+MovR:AddToggle("orbAbsT",{Text="Absolute Coords",Default=false,Callback=function(v)orbAbsCoords=v end})
+MovR:AddToggle("orbRelT",{Text="Relative to Target",Default=true,Callback=function(v)orbRelativeToTarget=v end})
+MovR:AddToggle("orbLockT",{Text="Lock to Target",Default=false,Callback=function(v)orbLock=v end})
+MovR:AddDivider()
+MovR:AddLabel("── Multi-TP ──")
+MovR:AddToggle("orbMultiT",{Text="Multi TP Per Tick",Default=false,Callback=function(v)orbMultiTP=v end})
+MovR:AddSlider("orbMultiCntS",{Text="Multi Count",Min=2,Max=20,Default=3,Rounding=0,Callback=function(v)orbMultiCount=v end})
+MovR:AddSlider("orbMultiDelS",{Text="Multi Delay",Min=0,Max=0.05,Default=0.002,Rounding=3,Suffix="s",Callback=function(v)orbMultiDelay=v end})
+MovR:AddDivider()
+MovR:AddToggle("tpAura",{Text="TP Aura",Default=false,Callback=function(v)S.tpa=v end})
+MovR:AddSlider("tpaH",{Text="Aura Height",Min=1,Max=20,Default=3,Rounding=1,Suffix="st",Callback=function(v)_G.tpaLen=v end})
+
+tpaLen=3
+tpaSpeed2=0.05
+tpaAng=0
+
+-- COMBAT TAB
+CombTab=Window:AddTab("Combat","sword")
+CombL=CombTab:AddLeftGroupbox("Bypass")
+CombR=CombTab:AddRightGroupbox("Aimbot")
+
+CombL:AddToggle("bypassT",{Text="Bypass",Default=false,Callback=function(v)S.bypass=v end})
+CombL:AddDropdown("bpModeD",{Text="Bypass Mode",Values={"firetouchinterest","getconnections","both","velocity","multi","spam"},Default="both",Callback=function(v)bpMode=v end})
+CombL:AddSlider("bpDistS",{Text="Hit Distance",Min=1,Max=50,Default=5,Rounding=0,Suffix="st",Callback=function(v)bpDistance=v end})
+CombL:AddToggle("bpMultiT",{Text="Multi Hit",Default=false,Callback=function(v)bpMultiHit=v end})
+CombL:AddSlider("bpDelayS",{Text="Hit Delay",Min=0.01,Max=0.5,Default=0.05,Rounding=2,Suffix="s",Callback=function(v)bpHitDelay=v end})
+CombL:AddDivider()
+CombL:AddToggle("riotAbuseT",{Text="Riot Abuser",Default=false,Callback=function(v)S.riotAbuse=v end})
+CombL:AddDropdown("riotModeD",{Text="Riot Mode",Values={"touched","destroy","both","spam","detach","velocity"},Default="touched",Callback=function(v)riotMode=v end})
+CombL:AddToggle("riotSpamT",{Text="Riot Spam",Default=false,Callback=function(v)riotSpam=v end})
+CombL:AddDivider()
+CombL:AddToggle("rivalsT",{Text="Rivals Weapon Bypass",Default=false,Callback=function(v)S.rivalsBypass=v if v then task.spawn(findRivalsRemotes) end end})
+CombL:AddDropdown("rivalsBpModeD",{Text="Rivals Mode",Values={"remote","touch","both","all"},Default="remote",Callback=function(v)rivalsBpMode=v end})
+CombL:AddSlider("rivalsDmgS",{Text="Rivals Damage",Min=1,Max=100,Default=10,Rounding=0,Suffix="dmg",Callback=function(v)rivalsDmg=v end})
+CombL:AddButton({Text="Scan Remotes",Callback=function()
+	task.spawn(findRivalsRemotes)
+	pcall(function()Library:Notify({Title="aerodynamic",Description="scanning...",Time=2})end)
+end})
+CombL:AddDivider()
+CombL:AddToggle("rfT",{Text="Rapid Fire",Default=false,Callback=function(v)S.rf=v if v then startRF() else stopRF() end end})
+CombL:AddSlider("rfRate",{Text="Fire Rate",Min=0.001,Max=0.2,Default=0.01,Rounding=3,Suffix="s",Callback=function(v)fireRate=v end})
+CombL:AddToggle("rfDoubleT",{Text="Double Fire",Default=false,Callback=function(v)rfDouble=v end})
+CombL:AddToggle("rfMultiT",{Text="Multi Activate",Default=false,Callback=function(v)S.rfMultiActivate=v end})
+CombL:AddSlider("rfMultiCntS",{Text="Multi Count",Min=2,Max=10,Default=3,Rounding=0,Callback=function(v)rfMultiCount=v end})
+CombL:AddToggle("rfBypassT",{Text="Bypass Fire",Default=false,Callback=function(v)S.rfBypassMode=v rfBypass=v end})
+CombL:AddToggle("rfAutoSwingT",{Text="Auto Swing",Default=false,Callback=function(v)S.rfAutoSwing=v end})
+CombL:AddSlider("rfSwingRateS",{Text="Swing Rate",Min=0.01,Max=0.5,Default=0.05,Rounding=2,Suffix="s",Callback=function(v)rfSwingRate=v end})
+
+CombR:AddToggle("saT",{Text="Silent Aim",Default=false,Callback=function(v)S.sa=v updateSA() fovCircle.Visible=v and S.fovVisible end})
+CombR:AddSlider("saFovS",{Text="FOV",Min=20,Max=300,Default=120,Rounding=0,Suffix="px",Callback=function(v)saFOV=v fovCircle.Size=UDim2.new(0,v*2,0,v*2) fovCircle.Position=UDim2.new(0.5,-v,0.5,-v) end})
+CombR:AddSlider("saPredS",{Text="Prediction",Min=0,Max=0.2,Default=0.08,Rounding=3,Suffix="s",Callback=function(v)saPred=v end})
+CombR:AddDivider()
+CombR:AddToggle("fovVisT",{Text="FOV Circle Visible",Default=false,Callback=function(v)S.fovVisible=v fovCircle.Visible=v end})
+CombR:AddDropdown("fovModeD",{Text="FOV Style",Values={"outline","full","on"},Default="outline",Callback=function(v)fovMode=v updateFOVStyle() end})
+CombR:AddDropdown("fovColD",{Text="FOV Color",Values={"white","red","green","blue","yellow","cyan","pink","orange","purple"},Default="white",Callback=function(v)
+	cols={white=Color3.fromRGB(255,255,255),red=Color3.fromRGB(220,40,40),green=Color3.fromRGB(0,220,80),blue=Color3.fromRGB(0,140,255),yellow=Color3.fromRGB(255,220,0),cyan=Color3.fromRGB(0,220,200),pink=Color3.fromRGB(255,80,200),orange=Color3.fromRGB(255,150,0),purple=Color3.fromRGB(160,0,255)}
+	if cols[v] then fovColor=cols[v] updateFOVStyle() end
+end})
+CombR:AddDivider()
+CombR:AddToggle("aaT",{Text="Anti-Aim",Default=false,Callback=function(v)S.antiaim=v end})
+CombR:AddDropdown("aaModeD",{Text="Mode",Values={"spinbot","fast spin","jitter","backwards","sideways","pitch up","pitch down","fake lag","360 jitter","matrix","random","wobble","drunk","flip"},Default="spinbot",Callback=function(v)aaMode=v end})
+CombR:AddSlider("moveSpdS",{Text="Walk Speed",Min=10,Max=1000000,Default=16,Rounding=0,Suffix="st/s",Callback=function(v)
+	moveSpeed=v pcall(function()chr2=lp.Character if chr2 then hum2=chr2:FindFirstChildOfClass("Humanoid") if hum2 then hum2.WalkSpeed=v end end end)
+end})
+CombR:AddDivider()
+CombR:AddToggle("motionT",{Text="Motion Pattern",Default=false,Callback=function(v)S.motion=v end})
+CombR:AddDropdown("motionPatD",{Text="Pattern",Values={"orbit","figure8","spiral","bounce","random","desync","cross","tpspam","wave","helix","square","pendulum","tornado"},Default="orbit",Callback=function(v)motionPattern=v end})
+CombR:AddSlider("motionSpS",{Text="Speed",Min=5,Max=500,Default=50,Rounding=0,Callback=function(v)motionSpeed=v end})
+CombR:AddSlider("motionRadS",{Text="Radius",Min=1,Max=200,Default=15,Rounding=0,Suffix="st",Callback=function(v)motionR=v end})
+
+-- VISUALS TAB
+VisTab=Window:AddTab("Visuals","eye")
+EspL=VisTab:AddLeftGroupbox("ESP")
+EspR=VisTab:AddRightGroupbox("Crosshair")
+
+EspL:AddToggle("espBoxT",{Text="Box ESP",Default=false,Callback=function(v)S.espBox=v buildESP()end})
+EspL:AddToggle("espCornerBoxT",{Text="Corner Box",Default=false,Callback=function(v)S.espCornerBox=v buildESP()end})
+EspL:AddToggle("espChamsT",{Text="Chams",Default=false,Callback=function(v)S.espChams=v buildESP()end})
+EspL:AddToggle("espNameT",{Text="Names",Default=false,Callback=function(v)S.espName=v buildESP()end})
+EspL:AddToggle("espHealthT",{Text="Health Bar",Default=false,Callback=function(v)S.espHealth=v buildESP()end})
+EspL:AddToggle("espDistT",{Text="Distance",Default=false,Callback=function(v)S.espDist=v buildESP()end})
+EspL:AddToggle("espTracerT",{Text="Tracers",Default=false,Callback=function(v)S.espTracer=v end})
+EspL:AddToggle("espSkeletonT",{Text="Skeleton",Default=false,Callback=function(v)S.espSkeleton=v buildESP()end})
+EspL:AddToggle("espHeadCircT",{Text="Head Circle",Default=false,Callback=function(v)S.espHeadCircle=v buildESP()end})
+EspL:AddToggle("espHeadDotT",{Text="Head Dot",Default=false,Callback=function(v)S.espHeadDot=v buildESP()end})
+
+EspR:AddToggle("chT",{Text="Crosshair",Default=false,Callback=function(v)S.ch=v redrawCH()end})
+EspR:AddDropdown("chStyleD",{Text="Style",Values={"cross","T-shape","dot","circle","corners","X-cross","arrow","double-circle"},Default="cross",Callback=function(v)
+	m={["cross"]=1,["T-shape"]=2,["dot"]=3,["circle"]=4,["corners"]=5,["X-cross"]=6,["arrow"]=7,["double-circle"]=8}
+	if m[v] then chStyle=m[v] redrawCH() end
+end})
+EspR:AddSlider("chSzS",{Text="Size",Min=4,Max=60,Default=16,Rounding=0,Suffix="px",Callback=function(v)chSize=v redrawCH()end})
+EspR:AddSlider("chGpS",{Text="Gap",Min=0,Max=25,Default=5,Rounding=0,Suffix="px",Callback=function(v)chGap=v redrawCH()end})
+EspR:AddSlider("chThS",{Text="Thickness",Min=1,Max=8,Default=2,Rounding=0,Suffix="px",Callback=function(v)chThick=v redrawCH()end})
+EspR:AddSlider("chAlS",{Text="Opacity",Min=0,Max=1,Default=1,Rounding=2,Callback=function(v)chAlpha=v redrawCH()end})
+EspR:AddDropdown("chColD",{Text="Color",Values={"white","red","green","blue","yellow","cyan","pink","orange","purple","lime","gold","teal","coral","lavender","rainbow"},Default="white",Callback=function(v)
+	c={white=Color3.fromRGB(255,255,255),red=Color3.fromRGB(220,40,40),green=Color3.fromRGB(0,220,80),blue=Color3.fromRGB(0,140,255),yellow=Color3.fromRGB(255,220,0),cyan=Color3.fromRGB(0,220,200),pink=Color3.fromRGB(255,80,200),orange=Color3.fromRGB(255,150,0),purple=Color3.fromRGB(160,0,255),lime=Color3.fromRGB(120,255,0),gold=Color3.fromRGB(255,200,50),teal=Color3.fromRGB(0,200,180),coral=Color3.fromRGB(255,100,80),lavender=Color3.fromRGB(180,140,255)}
+	if v=="rainbow" then chRainbow=true else chRainbow=false if c[v] then chCol=c[v] redrawCH() end end
+end})
+EspR:AddDropdown("chOutlineColD",{Text="Outline Color",Values={"black","white","red","blue","green","none"},Default="black",Callback=function(v)
+	c={black=Color3.fromRGB(0,0,0),white=Color3.fromRGB(255,255,255),red=Color3.fromRGB(200,0,0),blue=Color3.fromRGB(0,100,255),green=Color3.fromRGB(0,200,80)}
+	if v=="none" then chOutline=false else chOutline=true if c[v] then chOutlineCol=c[v] end end redrawCH()
+end})
+EspR:AddToggle("chOutlineT",{Text="Outline",Default=false,Callback=function(v)chOutline=v redrawCH()end})
+EspR:AddToggle("chSpinT",{Text="Spin",Default=false,Callback=function(v)chRotate=v end})
+EspR:AddToggle("chBounceT",{Text="Bounce",Default=false,Callback=function(v)chBounce=v end})
+EspR:AddToggle("chRainbowT",{Text="Rainbow Color",Default=false,Callback=function(v)chRainbow=v end})
+EspR:AddToggle("chPulseT",{Text="Pulse",Default=false,Callback=function(v)chPulse=v end})
+EspR:AddToggle("chDynamicT",{Text="Dynamic (spread on shoot)",Default=false,Callback=function(v)chDynamic=v end})
+
+-- WORLD TAB
+WorldTab=Window:AddTab("World","sun")
+WldL=WorldTab:AddLeftGroupbox("Lighting")
+WldR=WorldTab:AddRightGroupbox("More")
+WldL:AddToggle("darkW",{Text="Dark World",Default=false,Callback=function(v)setWorld(v,0,0,Color3.fromRGB(0,0,0),Color3.fromRGB(0,0,0),100,Color3.fromRGB(0,0,20))end})
+WldL:AddToggle("fullbW",{Text="Fullbright",Default=false,Callback=function(v)setWorld(v,10,14,Color3.fromRGB(255,255,255),Color3.fromRGB(255,255,255),100000,Color3.fromRGB(0,0,0))end})
+WldL:AddToggle("rainbW",{Text="Rainbow",Default=false,Callback=function(v)S.rainbowWorld=v end})
+WldL:AddToggle("neonW",{Text="Neon",Default=false,Callback=function(v)setWorld(v,0.5,0,Color3.fromRGB(0,255,150),Color3.fromRGB(0,100,255),300,Color3.fromRGB(0,0,40))end})
+WldL:AddToggle("bloodW",{Text="Blood",Default=false,Callback=function(v)setWorld(v,0.3,0,Color3.fromRGB(80,0,0),Color3.fromRGB(120,0,0),200,Color3.fromRGB(60,0,0))end})
+WldL:AddToggle("blueW",{Text="Blue",Default=false,Callback=function(v)setWorld(v,0.4,2,Color3.fromRGB(0,50,150),Color3.fromRGB(0,80,200),400,Color3.fromRGB(0,20,80))end})
+WldL:AddToggle("purpleW",{Text="Purple Haze",Default=false,Callback=function(v)setWorld(v,0.4,0,Color3.fromRGB(60,0,100),Color3.fromRGB(80,0,140),250,Color3.fromRGB(40,0,80))end})
+WldL:AddToggle("sunsetW",{Text="Sunset",Default=false,Callback=function(v)setWorld(v,1,18,Color3.fromRGB(255,100,40),Color3.fromRGB(255,120,0),600,Color3.fromRGB(255,80,20))end})
+WldL:AddToggle("voidW",{Text="Void Black",Default=false,Callback=function(v)setWorld(v,0,0,Color3.fromRGB(0,0,0),Color3.fromRGB(0,0,0),10,Color3.fromRGB(0,0,0))end})
+WldL:AddToggle("fogW",{Text="Heavy Fog",Default=false,Callback=function(v)setWorld(v,1,14,Color3.fromRGB(180,180,180),Color3.fromRGB(200,200,200),30,Color3.fromRGB(200,200,200))end})
+WldR:AddToggle("whiteW",{Text="White",Default=false,Callback=function(v)setWorld(v,8,14,Color3.fromRGB(255,255,255),Color3.fromRGB(255,255,255),150,Color3.fromRGB(255,255,255))end})
+WldR:AddToggle("greenW",{Text="Toxic",Default=false,Callback=function(v)setWorld(v,0.3,0,Color3.fromRGB(0,80,20),Color3.fromRGB(0,120,30),180,Color3.fromRGB(0,60,10))end})
+WldR:AddToggle("goldW",{Text="Golden Hour",Default=false,Callback=function(v)setWorld(v,2,17,Color3.fromRGB(255,180,50),Color3.fromRGB(255,200,80),800,Color3.fromRGB(255,160,30))end})
+WldR:AddToggle("midnightW",{Text="Midnight",Default=false,Callback=function(v)setWorld(v,0.1,0,Color3.fromRGB(5,5,20),Color3.fromRGB(10,10,30),400,Color3.fromRGB(5,5,15))end})
+WldR:AddToggle("inverseW",{Text="Inverse/Negative",Default=false,Callback=function(v)setWorld(v,3,14,Color3.fromRGB(255,200,255),Color3.fromRGB(200,255,200),500,Color3.fromRGB(255,100,255))end})
+WldR:AddToggle("desertW",{Text="Desert",Default=false,Callback=function(v)setWorld(v,2,13,Color3.fromRGB(200,150,80),Color3.fromRGB(220,180,100),1000,Color3.fromRGB(220,200,150))end})
+WldR:AddToggle("arcticW",{Text="Arctic",Default=false,Callback=function(v)setWorld(v,1.5,13,Color3.fromRGB(200,220,255),Color3.fromRGB(220,230,255),300,Color3.fromRGB(200,220,240))end})
+WldR:AddToggle("cherryW",{Text="Cherry Blossom",Default=false,Callback=function(v)setWorld(v,1.5,12,Color3.fromRGB(255,180,200),Color3.fromRGB(255,200,210),600,Color3.fromRGB(255,200,220))end})
+WldR:AddToggle("enemyHLT",{Text="Enemy Highlight",Default=false,Callback=function(v)
+	S.enemyHL=v
+	for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+		if pl~=lp and pl.Character then
+			hl=pl.Character:FindFirstChildOfClass("Highlight")
+			if v then if not hl then h2=Instance.new("Highlight",pl.Character) h2.FillColor=accentCol h2.OutlineColor=Color3.fromRGB(255,255,255) h2.FillTransparency=0.4 h2.OutlineTransparency=0 end
+			else if hl then hl:Destroy() end end
+		end
+	end
+end})
+
+-- SOUNDS TAB
+SndTab=Window:AddTab("Sounds","volume-2")
+SndL=SndTab:AddLeftGroupbox("Notifications")
+SndR=SndTab:AddRightGroupbox("Sounds")
+SndL:AddToggle("hitNotifyT",{Text="Hit Notifier",Default=false,Callback=function(v)S.hitNotify=v end})
+SndL:AddToggle("killNotifyT",{Text="Kill Notifier",Default=false,Callback=function(v)S.killNotify=v end})
+SndR:AddToggle("hitSndT",{Text="Hit Sound",Default=false,Callback=function(v)S.hitSound=v if v then mkSound() end end})
+SndR:AddDropdown("hitSndD",{Text="Hit Sound Preset",Values=soundNames,Default="neverlose",Callback=function(v)
+	for i,n in ipairs(soundNames) do if n==v then sndIdx=i customHitSndId="" mkSound() pcall(function()if hitSnd then hitSnd:Play()end end) break end end
+end})
+SndR:AddSlider("hitVolS",{Text="Hit Volume",Min=0,Max=5,Default=1,Rounding=1,Callback=function(v)hitSndVol=v if hitSnd then pcall(function()hitSnd.Volume=v end) end end})
+SndR:AddSlider("hitPitchS",{Text="Hit Pitch",Min=0.1,Max=4,Default=1,Rounding=1,Callback=function(v)hitSndPitch=v if hitSnd then pcall(function()hitSnd.PlaybackSpeed=v end) end end})
+SndR:AddInput("customHitI",{Text="Custom Hit ID",Default="",Placeholder="sound id",Callback=function(v)customHitSndId=v mkSound()end})
+SndR:AddButton({Text="Test Hit Sound",Callback=function()mkSound() if hitSnd then pcall(function()hitSnd:Stop() hitSnd.TimePosition=0 hitSnd:Play()end) end end})
+SndR:AddDivider()
+SndR:AddToggle("killSndT",{Text="Kill Sound",Default=false,Callback=function(v)S.killSound=v if v then mkKillSound() end end})
+SndR:AddDropdown("killSndD",{Text="Kill Sound Preset",Values=killSoundNames,Default="ding",Callback=function(v)
+	for i,n in ipairs(killSoundNames) do if n==v then killSndIdx=i customKillSndId="" mkKillSound() pcall(function()if killSnd then killSnd:Play()end end) break end end
+end})
+SndR:AddSlider("killVolS",{Text="Kill Volume",Min=0,Max=5,Default=1,Rounding=1,Callback=function(v)killSndVol=v if killSnd then pcall(function()killSnd.Volume=v end) end end})
+SndR:AddSlider("killPitchS",{Text="Kill Pitch",Min=0.1,Max=4,Default=1,Rounding=1,Callback=function(v)killSndPitch=v if killSnd then pcall(function()killSnd.PlaybackSpeed=v end) end end})
+SndR:AddInput("customKillI",{Text="Custom Kill ID",Default="",Placeholder="sound id",Callback=function(v)customKillSndId=v mkKillSound()end})
+SndR:AddButton({Text="Test Kill Sound",Callback=function()mkKillSound() if killSnd then pcall(function()killSnd:Stop() killSnd.TimePosition=0 killSnd:Play()end) end end})
+
+-- UI SETTINGS TAB
+cfgName={v="default"}
+autoLoadName=""
+
+function getAllSettings()
+	return {
+		vsSpeed=vsSpeed,vsXDist=vsXDist,vsYDist=vsYDist,vsZDist=vsZDist,
+		vsPattern=vsPattern,vsRadius=vsRadius,
+		vsYCurrent=vsYCurrent,vsYCustom=vsYCustom,vsYIncrement=vsYIncrement,
+		vsCustomX=vsCustomX,vsCustomY=vsCustomY,vsCustomZ=vsCustomZ,
+		vsStaticX=vsStaticX,vsStaticY=vsStaticY,vsStaticZ=vsStaticZ,
+		vsBoostY=vsBoostY,vsLockY=vsLockY,vsLockYVal=vsLockYVal,
+		vsNoiseX=vsNoiseX,vsNoiseY=vsNoiseY,vsNoiseZ=vsNoiseZ,
+		vsScaleX=vsScaleX,vsScaleY=vsScaleY,vsScaleZ=vsScaleZ,
+		vsOffsetX=vsOffsetX,vsOffsetY=vsOffsetY,vsOffsetZ=vsOffsetZ,
+		vsPulseAmt=vsPulseAmt,vsWaveAmt=vsWaveAmt,
+		vsInvertX=vsInvertX,vsInvertZ=vsInvertZ,vsSwapXZ=vsSwapXZ,vsAbsCoords=vsAbsCoords,
+		vsMultiTP=vsMultiTP,vsMultiCount=vsMultiCount,vsMultiDelay=vsMultiDelay,
+		orbSpeed=orbSpeed,orbXDist=orbXDist,orbYDist=orbYDist,orbZDist=orbZDist,
+		orbPattern=orbPattern,orbTarget=orbTarget,orbRadius=orbRadius,orbHeight=orbHeight,
+		orbYCurrent=orbYCurrent,orbYCustom=orbYCustom,orbYIncrement=orbYIncrement,
+		orbCustomX=orbCustomX,orbCustomY=orbCustomY,orbCustomZ=orbCustomZ,
+		orbStaticX=orbStaticX,orbStaticY=orbStaticY,orbStaticZ=orbStaticZ,
+		orbBoostY=orbBoostY,orbLockY=orbLockY,orbLockYVal=orbLockYVal,
+		orbNoiseX=orbNoiseX,orbNoiseY=orbNoiseY,orbNoiseZ=orbNoiseZ,
+		orbScaleX=orbScaleX,orbScaleY=orbScaleY,orbScaleZ=orbScaleZ,
+		orbOffsetX=orbOffsetX,orbOffsetY=orbOffsetY,orbOffsetZ=orbOffsetZ,
+		orbPulseAmt=orbPulseAmt,orbWaveAmt=orbWaveAmt,
+		orbInvertX=orbInvertX,orbInvertZ=orbInvertZ,orbSwapXZ=orbSwapXZ,orbAbsCoords=orbAbsCoords,
+		orbMultiTP=orbMultiTP,orbMultiCount=orbMultiCount,orbMultiDelay=orbMultiDelay,
+		orbRelativeToTarget=orbRelativeToTarget,
+		saFOV=saFOV,saPred=saPred,fireRate=fireRate,aaMode=aaMode,moveSpeed=moveSpeed,
+		motionPattern=motionPattern,motionSpeed=motionSpeed,motionR=motionR,
+		chSize=chSize,chThick=chThick,chGap=chGap,chAlpha=chAlpha,chStyle=chStyle,
+		chOutline=chOutline,chRainbow=chRainbow,chPulse=chPulse,
+		bpDistance=bpDistance,bpHitDelay=bpHitDelay,riotMode=riotMode,
+		rivalsBpMode=rivalsBpMode,rivalsDmg=rivalsDmg,
+		rfMultiCount=rfMultiCount,rfSwingRate=rfSwingRate,fovMode=fovMode,
+		tVoid=S.void,tOrbit=S.orbit,tTpa=S.tpa,
+		tBypass=S.bypass,tRiot=S.riotAbuse,
+		tRf=S.rf,tSa=S.sa,tAa=S.antiaim,
+		tMotion=S.motion,tCh=S.ch,
+		tEspBox=S.espBox,tEspChams=S.espChams,tEspName=S.espName,
+		tEspHealth=S.espHealth,tEspDist=S.espDist,tEspTracer=S.espTracer,
+		tEspSkeleton=S.espSkeleton,tEspCorner=S.espCornerBox,
+		tHitNotify=S.hitNotify,tKillNotify=S.killNotify,
+		tHitSound=S.hitSound,tKillSound=S.killSound,
+		tStudsUI=S.studsUI,tRivals=S.rivalsBypass,
+		accentR=accentCol.R,accentG=accentCol.G,accentB=accentCol.B,
+	}
+end
+
+function applySettings(d)
+	if not d then return end
+	local num=function(k) if d[k] then return d[k] end end
+	if num("vsSpeed") then vsSpeed=d.vsSpeed end
+	if num("vsXDist") then vsXDist=d.vsXDist end if num("vsYDist") then vsYDist=d.vsYDist end if num("vsZDist") then vsZDist=d.vsZDist end
+	if d.vsPattern then vsPattern=d.vsPattern end
+	if num("vsRadius") then vsRadius=d.vsRadius end
+	if num("vsYCurrent") then vsYCurrent=d.vsYCurrent end if num("vsYCustom") then vsYCustom=d.vsYCustom end if num("vsYIncrement") then vsYIncrement=d.vsYIncrement end
+	if num("vsCustomX") then vsCustomX=d.vsCustomX end if num("vsCustomY") then vsCustomY=d.vsCustomY end if num("vsCustomZ") then vsCustomZ=d.vsCustomZ end
+	if num("vsStaticX") then vsStaticX=d.vsStaticX end if num("vsStaticY") then vsStaticY=d.vsStaticY end if num("vsStaticZ") then vsStaticZ=d.vsStaticZ end
+	if num("vsBoostY") then vsBoostY=d.vsBoostY end if d.vsLockY~=nil then vsLockY=d.vsLockY end if num("vsLockYVal") then vsLockYVal=d.vsLockYVal end
+	if num("vsNoiseX") then vsNoiseX=d.vsNoiseX end if num("vsNoiseY") then vsNoiseY=d.vsNoiseY end if num("vsNoiseZ") then vsNoiseZ=d.vsNoiseZ end
+	if num("vsScaleX") then vsScaleX=d.vsScaleX end if num("vsScaleY") then vsScaleY=d.vsScaleY end if num("vsScaleZ") then vsScaleZ=d.vsScaleZ end
+	if num("vsOffsetX") then vsOffsetX=d.vsOffsetX end if num("vsOffsetY") then vsOffsetY=d.vsOffsetY end if num("vsOffsetZ") then vsOffsetZ=d.vsOffsetZ end
+	if num("vsPulseAmt") then vsPulseAmt=d.vsPulseAmt end if num("vsWaveAmt") then vsWaveAmt=d.vsWaveAmt end
+	if d.vsInvertX~=nil then vsInvertX=d.vsInvertX end if d.vsInvertZ~=nil then vsInvertZ=d.vsInvertZ end
+	if d.vsSwapXZ~=nil then vsSwapXZ=d.vsSwapXZ end if d.vsAbsCoords~=nil then vsAbsCoords=d.vsAbsCoords end
+	if d.vsMultiTP~=nil then vsMultiTP=d.vsMultiTP end if num("vsMultiCount") then vsMultiCount=d.vsMultiCount end if num("vsMultiDelay") then vsMultiDelay=d.vsMultiDelay end
+	if num("orbSpeed") then orbSpeed=d.orbSpeed end
+	if num("orbXDist") then orbXDist=d.orbXDist end if num("orbYDist") then orbYDist=d.orbYDist end if num("orbZDist") then orbZDist=d.orbZDist end
+	if d.orbPattern then orbPattern=d.orbPattern end if d.orbTarget then orbTarget=d.orbTarget end
+	if num("orbRadius") then orbRadius=d.orbRadius end if num("orbHeight") then orbHeight=d.orbHeight end
+	if num("orbYCurrent") then orbYCurrent=d.orbYCurrent end if num("orbYCustom") then orbYCustom=d.orbYCustom end if num("orbYIncrement") then orbYIncrement=d.orbYIncrement end
+	if num("orbCustomX") then orbCustomX=d.orbCustomX end if num("orbCustomY") then orbCustomY=d.orbCustomY end if num("orbCustomZ") then orbCustomZ=d.orbCustomZ end
+	if num("orbStaticX") then orbStaticX=d.orbStaticX end if num("orbStaticY") then orbStaticY=d.orbStaticY end if num("orbStaticZ") then orbStaticZ=d.orbStaticZ end
+	if num("orbBoostY") then orbBoostY=d.orbBoostY end if d.orbLockY~=nil then orbLockY=d.orbLockY end if num("orbLockYVal") then orbLockYVal=d.orbLockYVal end
+	if num("orbNoiseX") then orbNoiseX=d.orbNoiseX end if num("orbNoiseY") then orbNoiseY=d.orbNoiseY end if num("orbNoiseZ") then orbNoiseZ=d.orbNoiseZ end
+	if num("orbScaleX") then orbScaleX=d.orbScaleX end if num("orbScaleY") then orbScaleY=d.orbScaleY end if num("orbScaleZ") then orbScaleZ=d.orbScaleZ end
+	if num("orbOffsetX") then orbOffsetX=d.orbOffsetX end if num("orbOffsetY") then orbOffsetY=d.orbOffsetY end if num("orbOffsetZ") then orbOffsetZ=d.orbOffsetZ end
+	if num("orbPulseAmt") then orbPulseAmt=d.orbPulseAmt end if num("orbWaveAmt") then orbWaveAmt=d.orbWaveAmt end
+	if d.orbInvertX~=nil then orbInvertX=d.orbInvertX end if d.orbInvertZ~=nil then orbInvertZ=d.orbInvertZ end
+	if d.orbSwapXZ~=nil then orbSwapXZ=d.orbSwapXZ end if d.orbAbsCoords~=nil then orbAbsCoords=d.orbAbsCoords end
+	if d.orbMultiTP~=nil then orbMultiTP=d.orbMultiTP end if num("orbMultiCount") then orbMultiCount=d.orbMultiCount end if num("orbMultiDelay") then orbMultiDelay=d.orbMultiDelay end
+	if d.orbRelativeToTarget~=nil then orbRelativeToTarget=d.orbRelativeToTarget end
+	if num("saFOV") then saFOV=d.saFOV fovCircle.Size=UDim2.new(0,saFOV*2,0,saFOV*2) fovCircle.Position=UDim2.new(0.5,-saFOV,0.5,-saFOV) end
+	if num("saPred") then saPred=d.saPred end if num("fireRate") then fireRate=d.fireRate end
+	if d.aaMode then aaMode=d.aaMode end if num("moveSpeed") then moveSpeed=d.moveSpeed end
+	if d.motionPattern then motionPattern=d.motionPattern end if num("motionSpeed") then motionSpeed=d.motionSpeed end if num("motionR") then motionR=d.motionR end
+	if num("chSize") then chSize=d.chSize end if num("chThick") then chThick=d.chThick end if num("chGap") then chGap=d.chGap end if num("chAlpha") then chAlpha=d.chAlpha end if num("chStyle") then chStyle=d.chStyle end
+	if d.chOutline~=nil then chOutline=d.chOutline end if d.chRainbow~=nil then chRainbow=d.chRainbow end if d.chPulse~=nil then chPulse=d.chPulse end
+	if num("bpDistance") then bpDistance=d.bpDistance end if num("bpHitDelay") then bpHitDelay=d.bpHitDelay end
+	if d.riotMode then riotMode=d.riotMode end if d.rivalsBpMode then rivalsBpMode=d.rivalsBpMode end if num("rivalsDmg") then rivalsDmg=d.rivalsDmg end
+	if num("rfMultiCount") then rfMultiCount=d.rfMultiCount end if num("rfSwingRate") then rfSwingRate=d.rfSwingRate end
+	if d.fovMode then fovMode=d.fovMode updateFOVStyle() end
+	if d.accentR then
+		accentCol=Color3.new(d.accentR,d.accentG,d.accentB)
+		xyzAcc.BackgroundColor3=accentCol fovStroke.Color=accentCol tracerF.BackgroundColor3=accentCol
+		pcall(function()Library.Scheme.AccentColor=accentCol Library:UpdateColorsUsingRegistry()end)
+	end
+	tmap={tVoid="voidSpam",tOrbit="orbitT",tTpa="tpAura",tBypass="bypassT",tRiot="riotAbuseT",tRf="rfT",tSa="saT",tAa="aaT",tMotion="motionT",tCh="chT",tEspBox="espBoxT",tEspChams="espChamsT",tEspName="espNameT",tEspHealth="espHealthT",tEspDist="espDistT",tEspTracer="espTracerT",tEspSkeleton="espSkeletonT",tEspCorner="espCornerBoxT",tHitNotify="hitNotifyT",tKillNotify="killNotifyT",tHitSound="hitSndT",tKillSound="killSndT",tStudsUI="studsUITogT",tRivals="rivalsT"}
+	for key,id in pairs(tmap) do
+		if d[key]~=nil then pcall(function() if Library.Toggles and Library.Toggles[id] then Library.Toggles[id]:SetValue(d[key]) end end) end
+	end
+	redrawCH() buildESP()
+end
+
+function getCfgNames()
+	names={} for n,_ in pairs(savedCfgs) do table.insert(names,n) end table.sort(names) return names
+end
+cfgDropRef=nil
+function refreshCfgDrop() if cfgDropRef then pcall(function()cfgDropRef:SetValues(getCfgNames())end) end end
+
+UITab=Window:AddTab("UI Settings","settings")
+UIL=UITab:AddLeftGroupbox("Configs")
+UIR=UITab:AddRightGroupbox("Interface")
+
+UIL:AddInput("cfgNameI",{Text="Config Name",Default="default",Placeholder="name",Finished=false,Callback=function(v)cfgName.v=v end})
+UIL:AddButton({Text="Create",Callback=function()
+	n=cfgName.v if n=="" then return end
+	if savedCfgs[n] then pcall(function()Library:Notify({Title="aerodynamic",Description="already exists: "..n,Time=2})end) return end
+	savedCfgs[n]=getAllSettings()
+	pcall(function()writefile("aerodynamic_cfgs.json",http:JSONEncode(savedCfgs))end)
+	refreshCfgDrop() pcall(function()Library:Notify({Title="aerodynamic",Description="created: "..n,Time=2})end)
+end})
+UIL:AddButton({Text="Load",Callback=function()
+	n=cfgName.v if n=="" then n="default" end
+	if savedCfgs[n] then applySettings(savedCfgs[n]) pcall(function()Library:Notify({Title="aerodynamic",Description="loaded: "..n,Time=2})end)
+	else pcall(function()Library:Notify({Title="aerodynamic",Description="not found: "..n,Time=2})end) end
+end})
+UIL:AddButton({Text="Overwrite",Callback=function()
+	n=cfgName.v if n=="" then return end
+	if not savedCfgs[n] then pcall(function()Library:Notify({Title="aerodynamic",Description="doesnt exist: "..n,Time=2})end) return end
+	savedCfgs[n]=getAllSettings()
+	pcall(function()writefile("aerodynamic_cfgs.json",http:JSONEncode(savedCfgs))end)
+	pcall(function()Library:Notify({Title="aerodynamic",Description="overwritten: "..n,Time=2})end)
+end})
+UIL:AddButton({Text="Delete",Risky=true,Callback=function()
+	n=cfgName.v if n=="" then return end
+	savedCfgs[n]=nil
+	pcall(function()writefile("aerodynamic_cfgs.json",http:JSONEncode(savedCfgs))end)
+	refreshCfgDrop() pcall(function()Library:Notify({Title="aerodynamic",Description="deleted: "..n,Time=2})end)
+end})
+UIL:AddDivider()
+initNames=getCfgNames()
+cfgDropRef=UIL:AddDropdown("cfgDropD",{Text="Config List",Values=initNames,Default=initNames[1] or "",Callback=function(v)cfgName.v=v end})
+UIL:AddDivider()
+UIL:AddToggle("autoLoadT",{Text="Auto Load on Start",Default=false,Callback=function(v)
+	if v then autoLoadName=cfgName.v pcall(function()writefile("aerodynamic_autoload.txt",autoLoadName)end) pcall(function()Library:Notify({Title="aerodynamic",Description="auto load set: "..autoLoadName,Time=2})end)
+	else autoLoadName="" pcall(function()writefile("aerodynamic_autoload.txt","")end) end
+end})
+UIR:AddDropdown("accentColD",{Text="UI Color",Values={"red","blue","green","purple","orange","cyan","pink","white","yellow","lime","gold","teal","coral","rose","indigo","amber","emerald","sky","violet","fuchsia"},Default="red",Callback=function(v)
+	cols={red=Color3.fromRGB(220,40,40),blue=Color3.fromRGB(0,140,255),green=Color3.fromRGB(0,190,80),purple=Color3.fromRGB(140,0,255),orange=Color3.fromRGB(255,140,0),cyan=Color3.fromRGB(0,210,200),pink=Color3.fromRGB(255,60,180),white=Color3.fromRGB(240,240,240),yellow=Color3.fromRGB(255,210,0),lime=Color3.fromRGB(120,255,0),gold=Color3.fromRGB(255,200,50),teal=Color3.fromRGB(0,180,160),coral=Color3.fromRGB(255,100,80),rose=Color3.fromRGB(255,40,100),indigo=Color3.fromRGB(80,0,220),amber=Color3.fromRGB(255,170,0),emerald=Color3.fromRGB(0,200,100),sky=Color3.fromRGB(0,180,255),violet=Color3.fromRGB(180,0,255),fuchsia=Color3.fromRGB(255,0,180)}
+	if cols[v] then accentCol=cols[v] xyzAcc.BackgroundColor3=accentCol fovStroke.Color=accentCol tracerF.BackgroundColor3=accentCol pcall(function()Library.Scheme.AccentColor=accentCol Library:UpdateColorsUsingRegistry()end) buildESP() end
+end})
+UIR:AddDropdown("uiToggleKeyD",{Text="UI Toggle Key",Values={"RightShift","RightControl","F1","F2","F3","F4","F10","Insert","Home","Delete","End"},Default="RightShift",Callback=function(v)
+	m={RightShift=Enum.KeyCode.RightShift,RightControl=Enum.KeyCode.RightControl,F1=Enum.KeyCode.F1,F2=Enum.KeyCode.F2,F3=Enum.KeyCode.F3,F4=Enum.KeyCode.F4,F10=Enum.KeyCode.F10,Insert=Enum.KeyCode.Insert,Home=Enum.KeyCode.Home,Delete=Enum.KeyCode.Delete,End=Enum.KeyCode.End}
+	if m[v] then Library.ToggleKeybind=m[v] end
+end})
+UIR:AddDropdown("notifySideD",{Text="Notify Side",Values={"Right","Left"},Default="Right",Callback=function(v)pcall(function()Library:SetNotifySide(v)end)end})
+UIR:AddSlider("dpiScaleS",{Text="DPI Scale",Min=50,Max=200,Default=100,Rounding=0,Suffix="%",Callback=function(v)pcall(function()Library:SetDPIScale(v)end)end})
+UIR:AddToggle("xyzVisT",{Text="XYZ Hud Visible",Default=true,Callback=function(v)xyzF.Visible=v and S.void end})
+UIR:AddToggle("studsUITogT",{Text="Studs UI",Default=false,Callback=function(v)S.studsUI=v buildStudsUI()end})
+UIR:AddDivider()
+UIR:AddButton({Text="Unload Script",Risky=true,Callback=function()
+	pcall(function()Library:Unload()end)
+	for _,sg in ipairs({notifSg,espSg,chSg,fovSg,XYZhud}) do pcall(function()sg:Destroy()end) end
+	if studsUIRef then pcall(function()studsUIRef:Destroy()end) end
+	if studsUIUpdateConn then studsUIUpdateConn:Disconnect() end
+	if rfConn then rfConn:Disconnect() end
+	if saConn then saConn:Disconnect() end
+	if hitSnd then pcall(function()hitSnd:Destroy()end) end
+	if killSnd then pcall(function()killSnd:Destroy()end) end
+end})
+UIR:AddDivider()
+kbVoid=UIR:AddToggle("kbVoidT",{Text="Void Spam",Default=false,Callback=function(v)S.void=v pcall(function()if Library.Toggles["voidSpam"] then Library.Toggles["voidSpam"]:SetValue(v)end end)end})
+kbVoid:AddKeyPicker("kbVoidKey",{Text="Void Spam",Default="F5",Mode="Toggle",Callback=function(v)S.void=v pcall(function()if Library.Toggles["voidSpam"] then Library.Toggles["voidSpam"]:SetValue(v)end end)end})
+kbBp=UIR:AddToggle("kbBpT",{Text="Bypass",Default=false,Callback=function(v)S.bypass=v end})
+kbBp:AddKeyPicker("kbBpKey",{Text="Bypass",Default="RightControl",Mode="Toggle",Callback=function(v)S.bypass=v end})
+kbRf=UIR:AddToggle("kbRfT",{Text="Rapid Fire",Default=false,Callback=function(v)S.rf=v if v then startRF() else stopRF() end end})
+kbRf:AddKeyPicker("kbRfKey",{Text="Rapid Fire",Default="F7",Mode="Toggle",Callback=function(v)S.rf=v if v then startRF() else stopRF() end end})
+kbSa=UIR:AddToggle("kbSaT",{Text="Silent Aim",Default=false,Callback=function(v)S.sa=v updateSA() fovCircle.Visible=v and S.fovVisible end})
+kbSa:AddKeyPicker("kbSaKey",{Text="Silent Aim",Default="F6",Mode="Toggle",Callback=function(v)S.sa=v updateSA() fovCircle.Visible=v and S.fovVisible end})
+kbRivals=UIR:AddToggle("kbRivalsT",{Text="Rivals Bypass",Default=false,Callback=function(v)S.rivalsBypass=v end})
+kbRivals:AddKeyPicker("kbRivalsKey",{Text="Rivals Bypass",Default="F8",Mode="Toggle",Callback=function(v)S.rivalsBypass=v end})
+
+task.spawn(function()
+	task.wait(2)
+	ok2,af=pcall(readfile,"aerodynamic_autoload.txt")
+	if ok2 and af and af~="" then
+		d=savedCfgs[af]
+		if d then applySettings(d) pcall(function()Library:Notify({Title="aerodynamic",Description="auto loaded: "..af,Time=3})end) end
+	end
+end)
+
+-- RENDER LOOP
+rs.RenderStepped:Connect(function(dt)
+	ut=ut+dt if ut<0.1 then return end ut=0
+	pcall(function()
+		if S.ch then
+			if chRotate then chAng=(chAng+300*0.1)%360 chFrame.Rotation=chAng else chFrame.Rotation=0 end
+			if chBounce then chBV=chBV+chBD*35*0.1 if chBV>6 then chBD=-1 elseif chBV<0 then chBD=1 end else chBV=0 end
+			redrawCH()
+		end
+		if S.espBox or S.espName or S.espHealth or S.espDist or S.espChams or S.espSkeleton or S.espCornerBox or S.espHeadCircle or S.espHeadDot then buildESP() end
+		updateTracer()
+		if S.rainbowWorld then
+			l=game:GetService("Lighting") h2=(tick()*30)%360 c2=Color3.fromHSV(h2/360,0.8,1)
+			l.Ambient=c2 l.OutdoorAmbient=c2 l.FogColor=c2
+		end
+		if S.enemyHL then
+			for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+				if pl~=lp and pl.Character then
+					if not pl.Character:FindFirstChildOfClass("Highlight") then
+						h2=Instance.new("Highlight",pl.Character)
+						h2.FillColor=accentCol h2.OutlineColor=Color3.fromRGB(255,255,255) h2.FillTransparency=0.4 h2.OutlineTransparency=0
+					end
+				end
+			end
+		end
+		if S.ch and chDynamic then
+			if uis:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then chBV=math.min(chBV+2,12)
+			else chBV=math.max(chBV-0.5,0) end
+		end
+		if S.void then
+			chr2=lp.Character hrp2=chr2 and chr2:FindFirstChild("HumanoidRootPart")
+			if hrp2 then
+				xyzX.Text=string.format("%.0f studs",hrp2.Position.X)
+				xyzY.Text=string.format("%.0f studs",hrp2.Position.Y)
+				xyzZ.Text=string.format("%.0f studs",hrp2.Position.Z)
+			end
+		end
+	end)
+end)
+
+-- core tp function for void spam
+function computeVSCoords(hrp)
+	x,y,z=0,0,0
+	pat=vsPattern
+	if pat=="custom" then
+		x=vsCustomX y=vsCustomY z=vsCustomZ
+		return x,y,z
+	elseif pat=="static" then
+		x=vsStaticX y=vsStaticY+vsBoostY z=vsStaticZ
+	elseif pat=="void" then
+		x=(math.random()-0.5)*2*vsXDist
+		y=vsYCurrent+vsBoostY
+		z=(math.random()-0.5)*2*vsZDist
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="everywhere" then
+		x=(math.random()-0.5)*2*vsXDist
+		y=(math.random()-0.5)*2*vsYDist
+		z=(math.random()-0.5)*2*vsZDist
+	elseif pat=="random" then
+		x=(math.random()-0.5)*2*vsRadius
+		y=vsYCurrent+vsBoostY+(math.random()-0.5)*vsRadius*0.1
+		z=(math.random()-0.5)*2*vsRadius
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="circular" then
+		vsAngle=(vsAngle+0.15)%(math.pi*2)
+		x=math.cos(vsAngle)*vsRadius
+		y=vsYCurrent+vsBoostY
+		z=math.sin(vsAngle)*vsRadius
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="spiral" then
+		vsAngle=(vsAngle+0.12)%(math.pi*2)
+		r=vsRadius*(0.5+0.5*math.abs(math.sin(vsAngle*0.3)))
+		x=math.cos(vsAngle)*r
+		y=vsYCurrent+vsBoostY+vsAngle*500
+		z=math.sin(vsAngle)*r
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="figure8" then
+		vsAngle=(vsAngle+0.1)%(math.pi*2)
+		x=vsRadius*math.sin(vsAngle)
+		y=vsYCurrent+vsBoostY
+		z=vsRadius*math.sin(vsAngle)*math.cos(vsAngle)
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="zigzag" then
+		vsAngle=(vsAngle+0.12)%(math.pi*2)
+		x=vsXDist*math.sin(vsAngle)
+		y=vsYCurrent+vsBoostY
+		z=vsZDist*math.cos(vsAngle*2)
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="sine" then
+		vsAngle=(vsAngle+0.1)%(math.pi*2)
+		x=(math.random()-0.5)*2*vsXDist
+		y=vsYCurrent+vsBoostY+vsRadius*math.sin(vsAngle)
+		z=(math.random()-0.5)*2*vsZDist
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="grid" then
+		gx=math.floor(math.random()*8)*vsRadius/8
+		gz=math.floor(math.random()*8)*vsRadius/8
+		x=gx y=vsYCurrent+vsBoostY z=gz
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="cluster" then
+		x=(math.random()-0.5)*vsRadius*0.05
+		y=vsYCurrent+vsBoostY
+		z=(math.random()-0.5)*vsRadius*0.05
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="vortex" then
+		vsAngle=(vsAngle+0.2)%(math.pi*2)
+		r=vsRadius*(0.3+0.7*math.abs(math.sin(vsAngle*0.5)))
+		x=(math.random()-0.5)*vsXDist+math.cos(vsAngle)*r
+		y=vsYCurrent+vsBoostY
+		z=(math.random()-0.5)*vsZDist+math.sin(vsAngle)*r
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="explosion" then
+		dir=Vector3.new(math.random()-0.5,0,math.random()-0.5).Unit
+		x=dir.X*vsXDist y=vsYCurrent+vsBoostY z=dir.Z*vsZDist
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="desync" then
+		x=hrp.Position.X+(math.random()-0.5)*vsXDist
+		y=vsYCurrent+vsBoostY
+		z=hrp.Position.Z+(math.random()-0.5)*vsZDist
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="bounce" then
+		vsStepDir=vsStepDir or 1
+		vsYCurrent=vsYCurrent+vsYIncrement*vsStepDir
+		if math.abs(vsYCurrent)>math.abs(vsYCustom)+vsYDist then vsStepDir=-vsStepDir end
+		x=(math.random()-0.5)*2*vsXDist y=vsYCurrent+vsBoostY z=(math.random()-0.5)*2*vsZDist
+	elseif pat=="wave" then
+		vsAngle=(vsAngle+0.08)%(math.pi*2)
+		x=vsXDist*math.sin(vsAngle)
+		y=vsYCurrent+vsBoostY+vsRadius*0.1*math.sin(vsAngle*3)
+		z=vsZDist*math.cos(vsAngle*0.5)
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="helix" then
+		vsAngle=(vsAngle+0.1)%(math.pi*2)
+		x=math.cos(vsAngle)*vsRadius
+		y=vsYCurrent+vsBoostY+math.sin(vsAngle*0.5)*vsRadius*0.5
+		z=math.sin(vsAngle)*vsRadius
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="star" then
+		vsAngle=(vsAngle+0.13)%(math.pi*2)
+		local sp=5
+		local outer=vsRadius local inner=vsRadius*0.4
+		local idx=math.floor(vsAngle/(math.pi*2/sp))
+		local frac=(vsAngle%(math.pi*2/sp))/(math.pi*2/sp)
+		local r1=frac<0.5 and outer or inner
+		x=math.cos(vsAngle)*r1 y=vsYCurrent+vsBoostY z=math.sin(vsAngle)*r1
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="galaxy" then
+		vsAngle=(vsAngle+0.07)%(math.pi*2)
+		vsAngle2=(vsAngle2 or 0)+0.03
+		local arm=math.floor(math.random()*3)*math.pi*2/3
+		local r=vsRadius*(0.2+0.8*math.random())
+		local twist=arm+r*0.002
+		x=math.cos(twist)*r+(math.random()-0.5)*vsRadius*0.1
+		y=vsYCurrent+vsBoostY+(math.random()-0.5)*vsRadius*0.02
+		z=math.sin(twist)*r+(math.random()-0.5)*vsRadius*0.1
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="matrix" then
+		local cols2=8 local rows=8
+		local ci=math.floor(math.random()*cols2)
+		local ri=math.floor(math.random()*rows)
+		x=(ci-cols2/2)*vsRadius/cols2*2
+		y=vsYCurrent+vsBoostY
+		z=(ri-rows/2)*vsRadius/rows*2
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="strafe" then
+		vsAngle=(vsAngle+0.15)%(math.pi*2)
+		x=vsXDist*math.sin(vsAngle)
+		y=vsYCurrent+vsBoostY
+		z=0
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="cross" then
+		vsAngle=(vsAngle+0.1)%(math.pi*2)
+		local side=math.floor(vsAngle/(math.pi*0.5))%4
+		local offsets2={{vsRadius,0},{0,vsRadius},{-vsRadius,0},{0,-vsRadius}}
+		local o=offsets2[side+1]
+		x=o[1] y=vsYCurrent+vsBoostY z=o[2]
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="diamond" then
+		vsAngle=(vsAngle+0.1)%(math.pi*2)
+		local t2=(vsAngle%(math.pi*0.5))/(math.pi*0.5)
+		local side=math.floor(vsAngle/(math.pi*0.5))%4
+		local corners2={{vsRadius,0},{0,vsRadius},{-vsRadius,0},{0,-vsRadius}}
+		local c1=corners2[side+1] local c2=corners2[(side%4)+1]
+		x=c1[1]+(c2[1]-c1[1])*t2 y=vsYCurrent+vsBoostY z=c1[2]+(c2[2]-c1[2])*t2
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="tornado" then
+		vsAngle=(vsAngle+0.15)%(math.pi*2)
+		local ri=(vsTeleportCount or 0)%20
+		local r=vsRadius*(ri/20)
+		x=math.cos(vsAngle)*r y=vsYCurrent+vsBoostY+ri*vsRadius*0.05 z=math.sin(vsAngle)*r
+		vsTeleportCount=(vsTeleportCount or 0)+1
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="pendulum" then
+		vsAngle=(vsAngle+0.12)%(math.pi*2)
+		x=vsRadius*math.sin(vsAngle) y=vsYCurrent+vsBoostY z=0
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="random3d" then
+		x=(math.random()-0.5)*2*vsXDist
+		y=(math.random()-0.5)*2*vsYDist+vsBoostY
+		z=(math.random()-0.5)*2*vsZDist
+	elseif pat=="sphere" then
+		local theta=math.random()*math.pi*2
+		local phi=math.acos(2*math.random()-1)
+		x=vsRadius*math.sin(phi)*math.cos(theta)
+		y=vsYCurrent+vsBoostY+vsRadius*math.cos(phi)
+		z=vsRadius*math.sin(phi)*math.sin(theta)
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="cube" then
+		local face=math.random(1,6)
+		local u=(math.random()-0.5)*2*vsRadius local v2=(math.random()-0.5)*2*vsRadius
+		if face==1 then x=vsRadius y=vsYCurrent+vsBoostY+u z=v2
+		elseif face==2 then x=-vsRadius y=vsYCurrent+vsBoostY+u z=v2
+		elseif face==3 then x=u y=vsYCurrent+vsBoostY+vsRadius z=v2
+		elseif face==4 then x=u y=vsYCurrent+vsBoostY-vsRadius z=v2
+		elseif face==5 then x=u y=vsYCurrent+vsBoostY+v2 z=vsRadius
+		else x=u y=vsYCurrent+vsBoostY+v2 z=-vsRadius end
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	elseif pat=="noise" then
+		local t3=tick()
+		x=math.sin(t3*1.3)*vsXDist+(math.random()-0.5)*vsXDist*0.5
+		y=vsYCurrent+vsBoostY+math.cos(t3*0.7)*vsRadius*0.1
+		z=math.cos(t3*1.7)*vsZDist+(math.random()-0.5)*vsZDist*0.5
+		if vsYIncrEnabled then vsYCurrent=vsYCurrent+vsYIncrement end
+	else
+		x=(math.random()-0.5)*2*vsXDist
+		y=(math.random()-0.5)*2*vsYDist
+		z=(math.random()-0.5)*2*vsZDist
+	end
+	return applyVSModifiers(x,y,z)
+end
+
+-- core tp function for orbit
+function computeORBCoords(hrp,epos)
+	x,y,z=0,0,0
+	pat=orbPattern
+	local bx=orbRelativeToTarget and epos.X or 0
+	local by=orbRelativeToTarget and epos.Y or 0
+	local bz=orbRelativeToTarget and epos.Z or 0
+	if pat=="custom" then
+		x=orbCustomX y=orbCustomY z=orbCustomZ
+		return x,y,z
+	elseif pat=="static" then
+		x=orbStaticX y=orbStaticY+orbBoostY z=orbStaticZ
+	elseif pat=="void" then
+		x=bx+(math.random()-0.5)*2*orbXDist
+		y=orbYCurrent+orbBoostY
+		z=bz+(math.random()-0.5)*2*orbZDist
+		if orbYIncrEnabled then orbYCurrent=orbYCurrent+orbYIncrement end
+	elseif pat=="everywhere" then
+		x=(math.random()-0.5)*2*orbXDist
+		y=(math.random()-0.5)*2*orbYDist
+		z=(math.random()-0.5)*2*orbZDist
+	elseif pat=="random" then
+		x=bx+(math.random()-0.5)*orbRadius*2
+		y=by+orbHeight+(math.random()-0.5)*orbRadius*0.5
+		z=bz+(math.random()-0.5)*orbRadius*2
+	elseif pat=="circular" or pat=="target" then
+		orbAngle=(orbAngle+0.15)%(math.pi*2)
+		x=bx+math.cos(orbAngle)*orbRadius
+		y=by+orbHeight
+		z=bz+math.sin(orbAngle)*orbRadius
+	elseif pat=="figure8" then
+		orbAngle=(orbAngle+0.1)%(math.pi*2)
+		x=bx+orbRadius*math.sin(orbAngle)
+		y=by+orbHeight
+		z=bz+orbRadius*math.sin(orbAngle)*math.cos(orbAngle)
+	elseif pat=="spiral" then
+		orbAngle=(orbAngle+0.12)%(math.pi*2)
+		r=orbRadius*(0.3+0.7*math.abs(math.sin(orbAngle*0.4)))
+		x=bx+math.cos(orbAngle)*r
+		y=by+orbHeight+math.sin(orbAngle)*3
+		z=bz+math.sin(orbAngle)*r
+	elseif pat=="zigzag" then
+		orbAngle=(orbAngle+0.12)%(math.pi*2)
+		x=bx+orbRadius*math.sin(orbAngle)
+		y=by+orbHeight
+		z=bz+orbRadius*math.sin(orbAngle*3)*0.3
+	elseif pat=="helix" then
+		orbAngle=(orbAngle+0.1)%(math.pi*2)
+		x=bx+math.cos(orbAngle)*orbRadius
+		y=by+orbHeight+math.sin(orbAngle*0.5)*orbRadius*0.5
+		z=bz+math.sin(orbAngle)*orbRadius
+	elseif pat=="square" then
+		orbAngle=(orbAngle+0.05)%(math.pi*2)
+		side=math.floor(orbAngle/(math.pi*0.5))%4
+		t2=(orbAngle%(math.pi*0.5))/(math.pi*0.5)
+		corners={{1,1},{-1,1},{-1,-1},{1,-1}}
+		c1=corners[side+1] c2=corners[(side%4)+1]
+		x=bx+(c1[1]+(c2[1]-c1[1])*t2)*orbRadius
+		y=by+orbHeight
+		z=bz+(c1[2]+(c2[2]-c1[2])*t2)*orbRadius
+	elseif pat=="triangle" then
+		orbAngle=(orbAngle+0.07)%(math.pi*2)
+		side=math.floor(orbAngle/(math.pi*2/3))%3
+		t2=(orbAngle%(math.pi*2/3))/(math.pi*2/3)
+		corners={}
+		for i=0,2 do a=math.pi*2/3*i table.insert(corners,{math.cos(a)*orbRadius,math.sin(a)*orbRadius}) end
+		c1=corners[side+1] c2=corners[(side%3)+1]
+		x=bx+(c1[1]+(c2[1]-c1[1])*t2)
+		y=by+orbHeight
+		z=bz+(c1[2]+(c2[2]-c1[2])*t2)
+	elseif pat=="vortex" then
+		orbAngle=(orbAngle+0.2)%(math.pi*2)
+		r=orbRadius*(0.3+0.7*math.abs(math.sin(orbAngle*0.5)))
+		x=(math.random()-0.5)*orbXDist+math.cos(orbAngle)*r
+		y=orbYCurrent+orbBoostY
+		z=(math.random()-0.5)*orbZDist+math.sin(orbAngle)*r
+		if orbYIncrEnabled then orbYCurrent=orbYCurrent+orbYIncrement end
+	elseif pat=="desync" then
+		x=bx+(math.random()-0.5)*orbXDist
+		y=orbYCurrent+orbBoostY
+		z=bz+(math.random()-0.5)*orbZDist
+		if orbYIncrEnabled then orbYCurrent=orbYCurrent+orbYIncrement end
+	elseif pat=="bounce" then
+		orbStepDir=orbStepDir or 1
+		orbYCurrent=orbYCurrent+orbYIncrement*orbStepDir
+		if math.abs(orbYCurrent)>math.abs(orbYCustom)+orbYDist then orbStepDir=-orbStepDir end
+		x=bx+(math.random()-0.5)*orbRadius*2 y=orbYCurrent+orbBoostY z=bz+(math.random()-0.5)*orbRadius*2
+	elseif pat=="wave" then
+		orbAngle=(orbAngle+0.08)%(math.pi*2)
+		x=bx+orbRadius*math.sin(orbAngle)
+		y=by+orbHeight+orbRadius*0.3*math.sin(orbAngle*2)
+		z=bz+orbRadius*math.cos(orbAngle*0.5)
+	elseif pat=="cross" then
+		orbAngle=(orbAngle+0.1)%(math.pi*2)
+		local side2=math.floor(orbAngle/(math.pi*0.5))%4
+		local offsets3={{orbRadius,0},{0,orbRadius},{-orbRadius,0},{0,-orbRadius}}
+		local o2=offsets3[side2+1]
+		x=bx+o2[1] y=by+orbHeight z=bz+o2[2]
+	elseif pat=="diamond" then
+		orbAngle=(orbAngle+0.1)%(math.pi*2)
+		local t3=(orbAngle%(math.pi*0.5))/(math.pi*0.5)
+		local side3=math.floor(orbAngle/(math.pi*0.5))%4
+		local corners3={{orbRadius,0},{0,orbRadius},{-orbRadius,0},{0,-orbRadius}}
+		local c3=corners3[side3+1] local c4=corners3[(side3%4)+1]
+		x=bx+c3[1]+(c4[1]-c3[1])*t3 y=by+orbHeight z=bz+c3[2]+(c4[2]-c3[2])*t3
+	elseif pat=="tornado" then
+		orbAngle=(orbAngle+0.15)%(math.pi*2)
+		local ri2=(vsTeleportCount or 0)%20
+		local r2=orbRadius*(ri2/20)
+		x=bx+math.cos(orbAngle)*r2 y=by+orbHeight+ri2*orbRadius*0.05 z=bz+math.sin(orbAngle)*r2
+		vsTeleportCount=(vsTeleportCount or 0)+1
+	elseif pat=="pendulum" then
+		orbAngle=(orbAngle+0.12)%(math.pi*2)
+		x=bx+orbRadius*math.sin(orbAngle) y=by+orbHeight z=bz
+	elseif pat=="random3d" then
+		x=(math.random()-0.5)*2*orbXDist
+		y=(math.random()-0.5)*2*orbYDist
+		z=(math.random()-0.5)*2*orbZDist
+	elseif pat=="sphere" then
+		local theta=math.random()*math.pi*2
+		local phi=math.acos(2*math.random()-1)
+		x=bx+orbRadius*math.sin(phi)*math.cos(theta)
+		y=by+orbHeight+orbRadius*math.cos(phi)
+		z=bz+orbRadius*math.sin(phi)*math.sin(theta)
+	elseif pat=="cube" then
+		local face=math.random(1,6)
+		local u=(math.random()-0.5)*2*orbRadius local v2=(math.random()-0.5)*2*orbRadius
+		if face==1 then x=bx+orbRadius y=by+orbHeight+u z=bz+v2
+		elseif face==2 then x=bx-orbRadius y=by+orbHeight+u z=bz+v2
+		elseif face==3 then x=bx+u y=by+orbHeight+orbRadius z=bz+v2
+		elseif face==4 then x=bx+u y=by+orbHeight-orbRadius z=bz+v2
+		elseif face==5 then x=bx+u y=by+orbHeight+v2 z=bz+orbRadius
+		else x=bx+u y=by+orbHeight+v2 z=bz-orbRadius end
+	elseif pat=="noise" then
+		local t4=tick()
+		x=bx+math.sin(t4*1.3)*orbRadius+(math.random()-0.5)*orbRadius*0.3
+		y=by+orbHeight+math.cos(t4*0.7)*orbRadius*0.3
+		z=bz+math.cos(t4*1.7)*orbRadius+(math.random()-0.5)*orbRadius*0.3
+	elseif pat=="star" then
+		orbAngle=(orbAngle+0.13)%(math.pi*2)
+		local sp=5
+		local outer=orbRadius local inner=orbRadius*0.4
+		local frac2=(orbAngle%(math.pi*2/sp))/(math.pi*2/sp)
+		local r3=frac2<0.5 and outer or inner
+		x=bx+math.cos(orbAngle)*r3 y=by+orbHeight z=bz+math.sin(orbAngle)*r3
+	elseif pat=="galaxy" then
+		local arm2=math.floor(math.random()*3)*math.pi*2/3
+		local r4=orbRadius*(0.2+0.8*math.random())
+		local twist2=arm2+r4*0.002
+		x=bx+math.cos(twist2)*r4+(math.random()-0.5)*orbRadius*0.1
+		y=by+orbHeight+(math.random()-0.5)*orbRadius*0.05
+		z=bz+math.sin(twist2)*r4+(math.random()-0.5)*orbRadius*0.1
+	elseif pat=="matrix" then
+		local cols3=8 local rows3=8
+		local ci3=math.floor(math.random()*cols3)
+		local ri3=math.floor(math.random()*rows3)
+		x=bx+(ci3-cols3/2)*orbRadius/cols3*2
+		y=by+orbHeight
+		z=bz+(ri3-rows3/2)*orbRadius/rows3*2
+	elseif pat=="strafe" then
+		orbAngle=(orbAngle+0.15)%(math.pi*2)
+		x=bx+orbRadius*math.sin(orbAngle) y=by+orbHeight z=bz
+	elseif pat=="ellipse" then
+		orbAngle=(orbAngle+0.1)%(math.pi*2)
+		x=bx+orbRadius*math.cos(orbAngle)
+		y=by+orbHeight
+		z=bz+orbRadius*0.5*math.sin(orbAngle)
+	else
+		x=(math.random()-0.5)*2*orbXDist
+		y=(math.random()-0.5)*2*orbYDist
+		z=(math.random()-0.5)*2*orbZDist
+	end
+	return applyORBModifiers(x,y,z)
+end
+
+-- HEARTBEAT
+rs.Heartbeat:Connect(function(dt)
+	chr=lp.Character if not chr then return end
+	hrp=chr:FindFirstChild("HumanoidRootPart") if not hrp then return end
+
+	if (S.void or S.orbit) and vsNoclip then
+		pcall(function()
+			for _,p in ipairs(chr:GetDescendants()) do
+				if p:IsA("BasePart") then p.CanCollide=false end
+			end
+		end)
+	end
+
+	-- VOID SPAM
+	if S.void then
+		if not savedNormalPos then savedNormalPos=hrp.CFrame end
+		tvs=tvs+dt
+		if tvs>=vsSpeed then
+			tvs=0
+			pcall(function()
+				ox,oy,oz=computeVSCoords(hrp)
+				if not vsFreeze then
+					hrp.CFrame=CFrame.new(ox,oy,oz)
+					hrp.AssemblyLinearVelocity=Vector3.zero
+					if vsMultiTP then
+						for mi=1,vsMultiCount-1 do
+							task.delay(vsMultiDelay*mi,function()
+								mx,my,mz=computeVSCoords(hrp)
+								pcall(function()
+									hrp.CFrame=CFrame.new(mx,my,mz)
+									hrp.AssemblyLinearVelocity=Vector3.zero
+								end)
+							end)
+						end
+					end
+				end
+			end)
+		end
+	else
+		savedNormalPos=nil tvs=0
+	end
+
+	-- ORBIT
+	if S.orbit then
+		if not savedOrbitPos then savedOrbitPos=hrp.CFrame end
+		torb=torb+dt
+		if torb>=orbSpeed then
+			torb=0
+			pcall(function()
+				epos=Vector3.new(0,0,0)
+				if orbTarget=="nearest" then
+					ne,_=getNearest()
+					if ne then nhrp2=ne:FindFirstChild("HumanoidRootPart") if nhrp2 then epos=nhrp2.Position end end
+				elseif orbTarget=="random" then
+					pls=game:GetService("Players"):GetPlayers() valid={}
+					for _,pl in ipairs(pls) do
+						if pl~=lp and pl.Character then h=pl.Character:FindFirstChild("HumanoidRootPart") if h then table.insert(valid,h.Position) end end
+					end
+					if #valid>0 then epos=valid[math.random(1,#valid)] end
+				elseif orbTarget=="self" then
+					epos=hrp.Position
+				elseif orbTarget=="furthest" then
+					fbd=0
+					for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+						if pl~=lp and pl.Character then
+							fh=pl.Character:FindFirstChild("HumanoidRootPart")
+							if fh then
+								fd=(fh.Position-hrp.Position).Magnitude
+								if fd>fbd then fbd=fd epos=fh.Position end
+							end
+						end
+					end
+				end
+				ox,oy,oz=computeORBCoords(hrp,epos)
+				hrp.CFrame=CFrame.new(ox,oy,oz)
+				hrp.AssemblyLinearVelocity=Vector3.zero
+				if orbMultiTP then
+					for mi=1,orbMultiCount-1 do
+						task.delay(orbMultiDelay*mi,function()
+							mx2,my2,mz2=computeORBCoords(hrp,epos)
+							pcall(function()
+								hrp.CFrame=CFrame.new(mx2,my2,mz2)
+								hrp.AssemblyLinearVelocity=Vector3.zero
+							end)
+						end)
+					end
+				end
+			end)
+		end
+	else
+		savedOrbitPos=nil torb=0
+	end
+
+	-- TP AURA
+	if S.tpa then
+		ttpa=ttpa+dt
+		if ttpa>=(tpaSpeed2 or 0.05) then ttpa=0
+			best,bd=nil,math.huge
+			for _,pl in ipairs(game:GetService("Players"):GetPlayers()) do
+				if pl~=lp and pl.Character then
+					h=pl.Character:FindFirstChild("HumanoidRootPart")
+					hum=pl.Character:FindFirstChildOfClass("Humanoid")
+					if h and hum and hum.Health>0 then
+						d=(h.Position-hrp.Position).Magnitude
+						if d<bd then best=pl.Character bd=d end
+					end
+				end
+			end
+			if best then
+				head2=best:FindFirstChild("Head") or best:FindFirstChild("HumanoidRootPart")
+				if head2 then
+					tpaAng=(tpaAng+15)%360
+					len=_G.tpaLen or tpaLen
+					pcall(function()
+						hrp.CFrame=CFrame.new(
+							head2.Position.X+math.cos(math.rad(tpaAng))*len,
+							head2.Position.Y+len,
+							head2.Position.Z+math.sin(math.rad(tpaAng))*len
+						)
+					end)
+				end
+			end
+		end
+	end
+
+	-- MOTION
+	if S.motion then
+		motionT=motionT+dt
+		re2=getAny()
+		epos=re2 and re2:FindFirstChild("HumanoidRootPart") and re2:FindFirstChild("HumanoidRootPart").Position or hrp.Position
+		pcall(function()
+			if motionPattern=="orbit" then
+				motionAng=(motionAng+motionSpeed*dt)%(math.pi*2)
+				hrp.CFrame=CFrame.new(epos.X+math.cos(motionAng)*motionR,epos.Y+5,epos.Z+math.sin(motionAng)*motionR)
+			elseif motionPattern=="figure8" then
+				motionAng=(motionAng+motionSpeed*0.5*dt)%(math.pi*2)
+				hrp.CFrame=CFrame.new(epos.X+math.sin(motionAng)*motionR,epos.Y+3,epos.Z+math.sin(motionAng*2)*motionR*0.5)
+			elseif motionPattern=="spiral" then
+				motionAng=(motionAng+motionSpeed*dt)%(math.pi*2)
+				r=motionR*(0.5+0.5*math.abs(math.sin(motionT*0.5)))
+				hrp.CFrame=CFrame.new(epos.X+math.cos(motionAng)*r,epos.Y+motionT*0.3,epos.Z+math.sin(motionAng)*r)
+				if motionT>10 then motionT=0 end
+			elseif motionPattern=="bounce" then
+				hrp.CFrame=CFrame.new(hrp.Position.X,hrp.Position.Y+(motionSpeed*dt*motionBounceDir),hrp.Position.Z)
+				if hrp.Position.Y>epos.Y+motionR then motionBounceDir=-1 elseif hrp.Position.Y<epos.Y-motionR then motionBounceDir=1 end
+			elseif motionPattern=="random" then
+				if motionT>=0.1 then motionT=0 hrp.CFrame=CFrame.new(epos.X+(math.random()-0.5)*motionR*2,epos.Y+math.random(0,8),epos.Z+(math.random()-0.5)*motionR*2) end
+			elseif motionPattern=="desync" then
+				if motionT>=0.04 then motionT=0 hrp.CFrame=CFrame.new(hrp.Position.X+(math.random()-0.5)*motionR,hrp.Position.Y,hrp.Position.Z+(math.random()-0.5)*motionR) end
+			elseif motionPattern=="cross" then
+				motionAng=(motionAng+motionSpeed*dt)%(math.pi*2)
+				side=math.floor(motionAng/(math.pi*0.5))%4
+				offsets={{1,0},{0,1},{-1,0},{0,-1}} o=offsets[side+1]
+				hrp.CFrame=CFrame.new(epos.X+o[1]*motionR,epos.Y+3,epos.Z+o[2]*motionR)
+			elseif motionPattern=="tpspam" then
+				hrp.CFrame=CFrame.new(epos.X+(math.random()-0.5)*motionR*2,epos.Y+(math.random()-0.5)*4,epos.Z+(math.random()-0.5)*motionR*2)
+			elseif motionPattern=="wave" then
+				motionAng=(motionAng+motionSpeed*dt)%(math.pi*2)
+				hrp.CFrame=CFrame.new(epos.X+motionR*math.sin(motionAng),epos.Y+motionR*0.5*math.sin(motionAng*2),epos.Z+motionR*math.cos(motionAng*0.5))
+			elseif motionPattern=="helix" then
+				motionAng=(motionAng+motionSpeed*dt)%(math.pi*2)
+				hrp.CFrame=CFrame.new(epos.X+math.cos(motionAng)*motionR,epos.Y+motionT*0.5,epos.Z+math.sin(motionAng)*motionR)
+				if motionT>8 then motionT=0 end
+			elseif motionPattern=="square" then
+				motionAng=(motionAng+motionSpeed*0.3*dt)%(math.pi*2)
+				side=math.floor(motionAng/(math.pi*0.5))%4
+				offsets={{1,0},{0,1},{-1,0},{0,-1}} o=offsets[side+1]
+				hrp.CFrame=CFrame.new(epos.X+o[1]*motionR,epos.Y+3,epos.Z+o[2]*motionR)
+			elseif motionPattern=="pendulum" then
+				motionAng=(motionAng+motionSpeed*dt)%(math.pi*2)
+				hrp.CFrame=CFrame.new(epos.X+motionR*math.sin(motionAng),epos.Y+5,epos.Z)
+			elseif motionPattern=="tornado" then
+				motionAng=(motionAng+motionSpeed*dt)%(math.pi*2)
+				r=motionR*(0.2+0.8*(motionT%5)/5)
+				hrp.CFrame=CFrame.new(epos.X+math.cos(motionAng)*r,epos.Y+3+motionT*0.4,epos.Z+math.sin(motionAng)*r)
+				if motionT>6 then motionT=0 end
+			end
+		end)
+	end
+
+	-- ANTI AIM
+	if S.antiaim then
+		pcall(function()
+			if aaMode=="spinbot" then aaAng=(aaAng+25)%360 hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(0,math.rad(aaAng),0)
+			elseif aaMode=="fast spin" then aaAng=(aaAng+90)%360 hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(0,math.rad(aaAng),0)
+			elseif aaMode=="jitter" then hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(0,math.rad(math.random(0,360)),0)
+			elseif aaMode=="backwards" then hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(0,math.rad(180),0)
+			elseif aaMode=="sideways" then hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(0,math.rad(90),0)
+			elseif aaMode=="pitch up" then hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(math.rad(89),0,0)
+			elseif aaMode=="pitch down" then hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(math.rad(-89),0,0)
+			elseif aaMode=="fake lag" then if math.random(1,3)==1 then hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(0,math.rad(math.random(0,360)),0) end
+			elseif aaMode=="360 jitter" then aaAng=(aaAng+45)%360 hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(math.rad(math.random(-30,30)),math.rad(aaAng),math.rad(math.random(-15,15)))
+			elseif aaMode=="matrix" then hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(math.rad(math.random(-180,180)),math.rad(math.random(-180,180)),math.rad(math.random(-180,180)))
+			elseif aaMode=="random" then aaAng=math.random(0,360) hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(0,math.rad(aaAng),0)
+			elseif aaMode=="wobble" then aaAng=(aaAng+15)%360 hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(math.rad(math.sin(aaAng/30)*20),math.rad(aaAng),0)
+			elseif aaMode=="drunk" then aaAng=(aaAng+8)%360 hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(math.rad(math.sin(aaAng/20)*15),math.rad(aaAng*2),math.rad(math.cos(aaAng/25)*10))
+			elseif aaMode=="flip" then aaAng=(aaAng+60)%360 flip=math.floor(aaAng/60)%2==0 and 0 or 180 hrp.CFrame=CFrame.new(hrp.Position)*CFrame.Angles(math.rad(flip),math.rad(aaAng),0)
+			end
+		end)
+	end
+
+	if S.bypass and not bpLock then
+		taf=taf+dt
+		if taf>=0.04+math.random()*0.01 then taf=0
+			pcall(function()
+				for _,t in ipairs(chr:GetChildren()) do
+					if t:IsA("Tool") then t:Activate() if rfDouble then t:Activate() end end
+				end
+			end)
+		end
+	end
+
+	if S.riotAbuse and riotSpam then
+		pcall(function()
+			e=getAny()
+			if e then
+				shield=riotCache[e]
+				if shield and shield.Parent then
+					myhrp=chr:FindFirstChild("HumanoidRootPart")
+					if myhrp then firetouchinterest(myhrp,shield,0) firetouchinterest(myhrp,shield,1) end
+				end
+			end
+		end)
+	end
+
+	if S.rivalsBypass then
+		pcall(function()
+			e,ep=getNearest() if e then doRivalsBypass(e) end
+		end)
+	end
+end)
+
+function doHit(obj)
+	pcall(function()
+		if not obj or not obj.Parent then return end
+		e=getAny() if not e then return end
+		ehrp=e:FindFirstChild("HumanoidRootPart") if not ehrp then return end
+		torso=e:FindFirstChild("UpperTorso") or e:FindFirstChild("Torso") or ehrp
+		head=e:FindFirstChild("Head")
+		chr2=lp.Character if not chr2 then return end
+		myhrp=chr2:FindFirstChild("HumanoidRootPart") if not myhrp then return end
+		vel=Vector3.zero pcall(function()vel=ehrp.AssemblyLinearVelocity end)
+		tpos=torso.Position+vel*0.05
+		pcall(function() obj.CFrame=CFrame.new(tpos) obj.Velocity=Vector3.zero obj.CanCollide=false end)
+		function hitPart(p)
+			if not p then return end
+			if bpMode=="firetouchinterest" or bpMode=="both" or bpMode=="multi" or bpMode=="spam" then
+				pcall(firetouchinterest,obj,p,0) pcall(firetouchinterest,obj,p,1)
+				pcall(firetouchinterest,myhrp,p,0) pcall(firetouchinterest,myhrp,p,1)
+				if bpMode=="spam" then for _=1,5 do pcall(firetouchinterest,obj,p,0) pcall(firetouchinterest,obj,p,1) end end
+			end
+			if bpMode=="getconnections" or bpMode=="both" or bpMode=="multi" then
+				pcall(function() for _,c in ipairs(getconnections(p.Touched)) do pcall(c.Fire,c,obj) end end)
+			end
+			if bpMode=="velocity" then
+				pcall(function() dir=(p.Position-obj.Position).Unit obj.AssemblyLinearVelocity=dir*500 end)
+				pcall(firetouchinterest,obj,p,0) pcall(firetouchinterest,obj,p,1)
+			end
+			if bpMultiHit then
+				task.delay(bpHitDelay,function() pcall(firetouchinterest,obj,p,0) pcall(firetouchinterest,obj,p,1) end)
+				task.delay(bpHitDelay*2,function() pcall(firetouchinterest,obj,p,0) pcall(firetouchinterest,obj,p,1) end)
+			end
+		end
+		hitPart(torso) hitPart(ehrp) if head then hitPart(head) end
+		if bpMode=="multi" then
+			for _,p in ipairs(e:GetDescendants()) do
+				if p:IsA("BasePart") then pcall(firetouchinterest,obj,p,0) pcall(firetouchinterest,obj,p,1) end
+			end
+		end
+		if S.riotAbuse then
+			pcall(function()
+				shield=riotCache[e]
+				if shield and shield.Parent then
+					if riotMode=="touched" then hitPart(shield) for _,c in ipairs(getconnections(shield.Touched)) do pcall(c.Fire,c,obj) end
+					elseif riotMode=="destroy" then shield.Size=Vector3.new(0.01,0.01,0.01) shield.CFrame=CFrame.new(tpos) hitPart(shield)
+					elseif riotMode=="both" then hitPart(shield) shield.CFrame=CFrame.new(tpos) hitPart(shield) for _,c in ipairs(getconnections(shield.Touched)) do pcall(c.Fire,c,obj) end
+					elseif riotMode=="spam" then for _=1,10 do pcall(firetouchinterest,obj,shield,0) pcall(firetouchinterest,obj,shield,1) pcall(firetouchinterest,myhrp,shield,0) pcall(firetouchinterest,myhrp,shield,1) end
+					elseif riotMode=="detach" then pcall(function()shield.Parent=workspace end) hitPart(shield)
+					elseif riotMode=="velocity" then pcall(function() dir=(tpos-shield.Position).Unit shield.AssemblyLinearVelocity=dir*1000 end) hitPart(shield)
+					end
+				end
+			end)
+		end
+	end)
+end
+
+function hookBP()
+	workspace.DescendantAdded:Connect(function(obj)
+		if not S.bypass then return end
+		if obj.Name~="SDSDSD" and obj.Name~="Sound" then return end
+		if snapped[obj] then return end
+		snapped[obj]=true
+		doHit(obj) task.defer(function()doHit(obj)end)
+		task.delay(bpHitDelay,function()doHit(obj)end)
+		task.delay(bpHitDelay*2,function()doHit(obj)end)
+	end)
+end
+
+function hookTools(chr2)
+	function hook(tool)
+		if not tool:IsA("Tool") then return end
+		tool.Activated:Connect(function()
+			if not S.bypass then return end
+			myhrp2=chr2:FindFirstChild("HumanoidRootPart") if not myhrp2 then return end
+			re=getAny() if not re then return end
+			rehrp2=re:FindFirstChild("HumanoidRootPart") if not rehrp2 then return end
+			rtorso2=re:FindFirstChild("UpperTorso") or re:FindFirstChild("Torso") or rehrp2
+			preSavedCF=myhrp2.CFrame bpLock=true
+			pcall(function() myhrp2.CFrame=CFrame.new(rtorso2.Position)*CFrame.new(0,0,bpDistance*0.1) end)
+		end)
+	end
+	for _,t in ipairs(chr2:GetChildren()) do hook(t) end
+	chr2.ChildAdded:Connect(hook)
+end
+
+if lp.Character then hookTools(lp.Character) end
+lp.CharacterAdded:Connect(hookTools)
+hookBP()
+
+task.spawn(function()
+	while true do task.wait(5) if S.bypass then hookBP() end end
+end)
+
+task.spawn(function()
+	while true do
+		task.wait(0.5)
+		if preSavedCF and bpLock then
+			chr2=lp.Character myhrp2=chr2 and chr2:FindFirstChild("HumanoidRootPart")
+			if myhrp2 then pcall(function()myhrp2.CFrame=preSavedCF end) end
+			preSavedCF=nil bpLock=false
+		end
+	end
+end)
+
+task.spawn(function()
+	while true do
+		task.wait(10)
+		pcall(function()
+			if not hitSnd or not hitSnd.Parent then mkSound() end
+			if not killSnd or not killSnd.Parent then mkKillSound() end
+		end)
+	end
+end)
+
+pcall(function()Library:Notify({Title="aerodynamic",Description="loaded successfully",Time=3})end)
+
+end)
+
+if err then
+	pcall(function()
+		sg2=Instance.new("ScreenGui",game:GetService("CoreGui"))
+		sg2.Name="AeroErr"
+		l=Instance.new("TextLabel",sg2)
+		l.Size=UDim2.new(1,0,0,30) l.Position=UDim2.new(0,0,0.5,-15)
+		l.BackgroundTransparency=1 l.Font=Enum.Font.Code l.TextSize=12
+		l.TextColor3=Color3.fromRGB(255,80,80)
+		l.Text="aerodynamic err: "..tostring(err)
+	end)
+	warn("aerodynamic err: "..tostring(err))
+end
